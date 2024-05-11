@@ -48,7 +48,7 @@ exports.mostrarPersonal = async (req, res) => {
 };
 
 exports.mostrarEquipos = async (req, res) => {
-    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId', (error, results) => {
+    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId', (error, results) => {
         if(error){
             console.log('Error al consultar la base de datos:', error);
             res.render('errores/error');
