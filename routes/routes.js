@@ -178,7 +178,7 @@ router.get('/lugarS', autenticacionMiddleware, autorizacionMiddleware(2), regist
 });
 
 // Ruta para registrar un usuario (POST)
-router.post('/userS' , registroControllerS.registrarUsuario, (req, res) => {
+router.post('/userS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarUsuario, (req, res) => {
     res.render('supervisor/registros', {
         login: true,
         name: req.user.name,
@@ -186,7 +186,7 @@ router.post('/userS' , registroControllerS.registrarUsuario, (req, res) => {
     });
 });
 
-router.get('/userS', mostrarControllerS.mostrarRol, (req, res) => {
+router.get('/userS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarRol, (req, res) => {
     res.render('supervisor/registros', {
         login: true,
         name: req.user.name,
