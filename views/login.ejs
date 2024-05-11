@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/da0b1f0b17.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/css/login.css">
+    <link href="resources/img/logo.png" rel="icon">
+    <title>Login</title>
+</head>
+<body>
+    <section>
+        <div class="contenedor">
+            <div class="formulario">
+                <form action="login" method="POST">
+                    <br><br><h2>Iniciar Sesión</h2>
+                    <div class="input-contenedor">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="user" name="user" autocomplete="off" required >
+                        <label for="user">User</label>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <input type="password" id="password" name="pass" required>
+                        <label for="password">Contraseña</label>
+                        <!-- Agregar iconos de ojo -->
+                        <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+                    </div>
+
+                    <div>
+                        <button type="submit" value="Login">Acceder</button>
+                    </div><br>
+                    <center><img clas="logo" src="resources/img/logoblanco.png" alt="Logo" width="138"></center>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <% if (typeof alert != "undefined")  { %>
+        <script>
+            Swal.fire({
+                title:'<%= alertTitle %>',
+                text:'<%= alertMessage %>',
+                icon:'<%= alertIcon %>',
+                showConfirmButton: <%= showConfirmButton %>,
+                timer: <%= timer %>
+            }).then(()=>{
+                window.location='/<%= ruta %>'
+            })
+        </script>
+    <% } %>
+    <script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        var passwordField = document.getElementById('password');
+        var fieldType = passwordField.getAttribute('type');
+        // Cambiar el tipo de entrada del campo de contraseña
+        if (fieldType === 'password') {
+            passwordField.setAttribute('type', 'text');
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
+        } else {
+            passwordField.setAttribute('type', 'password');
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
+        }
+    });
+</script>
+<script>
+    window.addEventListener('load', function() {
+        document.querySelectorAll('.input-contenedor input').forEach(function(input) {
+            input.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.add('autofilled');
+                } else {
+                    this.classList.remove('autofilled');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

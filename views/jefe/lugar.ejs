@@ -1,0 +1,217 @@
+<head>
+    <title>Lugar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<%- include ('layouts/dashboard.ejs') %>
+        <div class="container mt-5">      
+            <div class="col-md-20">
+                <form action="/lugarJ" method="POST">
+                    <h1>Lugar</h1><br>
+                        <input type="hidden" class="form-control mb-3" name="id">
+                        <input type="text" class="form-control mb-3" name="siglas" placeholder="Ingrese una nueva sigla (Ejemplo:Tienda Zihuatanejo)" required>
+                        <input type="text" class="form-control mb-3" name="edificio" placeholder="Ingrese un nuevo edificio (Ejemplo:Cat-Zihuatanejo)" required>
+                        <input type="submit" class="btn btn-primary">
+                </form>
+            </div>
+
+            <div class="col-md-20">
+            <h1> </h1>
+                <br><table class="table" >
+                    <thead class="custom-table table-striped" >
+                        <tr>
+                            <th>Nombre del Lugar</th>
+                            <th>Nombre del Edicio</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                        <% if (Array.isArray(results) && results.length > 0) { %>
+                            <tbody>
+                                <% results.forEach((lugar) => { %>
+                                    <tr>
+                                        <td><%= lugar.lugarSiglas %></td>
+                                        <td><%= lugar.lugarEdificios %></td>
+                                        <td>
+                                            <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= lugar.lugarId %>" data-siglas="<%= lugar.lugarSiglas %>" data-edificios="<%= lugar.lugarEdificios%>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                        </td>
+                                        <td>
+                                            <a href="#" data-id="<%= lugar.lugarId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            
+                        <% } else { %>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">No hay resultados disponibles</td>
+                                </tr>
+                            </tbody>
+                        <% } %>                        
+                </table>
+            </div>                 
+        </div>
+
+
+        <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Lugar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal-form" action="/updateLugar/:id" method="POST">
+                        <input type="hidden" name="lugarid" id="lugarid">
+                        <input type="text" name="siglas" id="siglas" class="form-control" required><br>
+                        <input type="text" name="edificios" id="edificios" class="form-control" required><br>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+    <!-- Content End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> 
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="resources/lib/chart/chart.min.js"></script>
+<script src="resources/lib/easing/easing.min.js"></script>
+<script src="resources/lib/waypoints/waypoints.min.js"></script>
+<script src="resources/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="resources/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="resources/js/main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <% if (typeof alert != "undefined")  { %>
+    <script>
+        Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= timer %>
+        }).then(()=>{
+            window.location='/<%= ruta %>'
+        })
+
+    </script>
+    <% } %>
+
+    <!-- Eliminar -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <% results.forEach((lugar) => { %>
+        <script>
+            document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+                    const id = this.getAttribute('data-id');
+        
+                    // Mostrar la alerta SweetAlert para confirmar la eliminación
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Esta acción eliminará el registro permanentemente.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
+                            fetch(`/deleteLugar/${id}`, {
+                                method: 'GET'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Error al eliminar el lugar');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Si la eliminación es exitosa, recargar la página para mostrar los cambios
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.error('Error al eliminar el lugar:', error);
+                                console.log(error);
+                                // Mostrar un mensaje de error al usuario
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al eliminar el lugar',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+        
+    <% }) %>
+
+    <script>
+        $(function(){
+            $('[data-toggle="tooltip"]').tooltip({
+                Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+            })
+    
+            $(document).on('click', '.update-btn', function(){
+                const $this = $(this);
+                const lugarid = $this.attr('data-id');
+                const siglas = $this.attr('data-siglas');
+                const edificios = $this.attr('data-edificios');
+                
+                // Asigna los valores a los campos del formulario en el modal
+                $('#siglas').val(siglas);
+                $('#edificios').val(edificios);
+                $('#lugarid').val(lugarid);
+                
+                // Muestra el modal
+                $('#myModal').modal('show');
+            });
+    
+            // Captura el envío del formulario y envía los datos al servidor
+            $('#modal-form').on('submit', function(event) {
+                event.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: '/updateLugar/:id',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Si la actualización es exitosa, recarga la página para mostrar los cambios
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error al actualizar el lugar:', error);
+                        // Muestra un mensaje de error al usuario
+                        alert('Ocurrió un error al actualizar el lugar');
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
+
+<%- include ('../Sesion.ejs') %>
+</body>
+
+</html>

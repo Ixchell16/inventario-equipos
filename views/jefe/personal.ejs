@@ -1,0 +1,223 @@
+<head>
+    <title>Personal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<%- include ('layouts/dashboard.ejs') %>
+        <div class="container mt-5">      
+            <div class="col-md-20">
+                <form action="/personalJ" method="POST">
+                    <h1>Personal</h1><br>
+                        <input type="hidden" class="form-control mb-3" name="id">
+                        <input type="text" class="form-control mb-3" name="nombre" placeholder="Ingrese el nombre completo (Ejemplo:Ixchell Salgado Nazario)" required>
+                        <input type="text" class="form-control mb-3" name="numero" placeholder="Ingrese el numero del empleado" required>
+                        <input type="text" class="form-control mb-3" name="puesto" placeholder="Ingrese el puesto del empleado (Ejemplo: Jefe de Trafico)" required>
+                        <input type="submit" class="btn btn-primary">
+                </form>
+            </div>
+
+            <div class="col-md-20">
+            <h1> </h1>
+                <br><table class="table" >
+                    <thead class="custom-table table-striped" >
+                        <tr>
+                            <th>Nombre del Personal</th>
+                            <th>Numero del empleado</th>
+                            <th>Puesto del empleado</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                        <% if (Array.isArray(results) && results.length > 0) { %>
+                            <tbody>
+                                <% results.forEach((personal) => { %>
+                                    <tr>
+                                        <td><%= personal.personalNombre %></td>
+                                        <td><%= personal.personalNumero %></td>
+                                        <td><%= personal.personalPuesto %></td>
+                                        <td>
+                                            <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= personal.personalId %>" data-nombre="<%= personal.personalNombre %>" data-numero="<%= personal.personalNumero %>" data-puesto="<%= personal.personalPuesto %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                        </td>
+                                        <td>
+                                            <a href="#" data-id="<%= personal.personalId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            
+                        <% } else { %>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5">No hay resultados disponibles</td>
+                                </tr>
+                            </tbody>
+                        <% } %>                        
+                </table>
+            </div>                 
+        </div>
+
+
+        <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Personal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal-form" action="/updatePersonal/:id" method="POST">
+                        <input type="hidden" name="personalid" id="personalid">
+                        <input type="text" name="nombre" id="nombre" class="form-control" required><br>
+                        <input type="text" name="numero" id="numero" class="form-control" required><br>
+                        <input type="text" name="puesto" id="puesto" class="form-control" required><br>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+    <!-- Content End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> 
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="resources/lib/chart/chart.min.js"></script>
+<script src="resources/lib/easing/easing.min.js"></script>
+<script src="resources/lib/waypoints/waypoints.min.js"></script>
+<script src="resources/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="resources/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="resources/js/main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <% if (typeof alert != "undefined")  { %>
+    <script>
+        Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= timer %>
+        }).then(()=>{
+            window.location='/<%= ruta %>'
+        })
+
+    </script>
+    <% } %>
+
+    <!-- Eliminar -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <% results.forEach((personal) => { %>
+        <script>
+            document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+                    const id = this.getAttribute('data-id');
+        
+                    // Mostrar la alerta SweetAlert para confirmar la eliminación
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: 'Esta acción eliminará el registro permanentemente.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
+                            fetch(`/deletePersonal/${id}`, {
+                                method: 'GET'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Error al eliminar al personal');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Si la eliminación es exitosa, recargar la página para mostrar los cambios
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.error('Error al eliminar al personal:', error);
+                                console.log(error);
+                                // Mostrar un mensaje de error al usuario
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al eliminar al personal',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+        
+    <% }) %>
+
+    <script>
+        $(function(){
+            $('[data-toggle="tooltip"]').tooltip({
+                Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+            })
+    
+            $(document).on('click', '.update-btn', function(){
+                const $this = $(this);
+                const personalid = $this.attr('data-id');
+                const nombre = $this.attr('data-nombre');
+                const numero = $this.attr('data-numero');
+                const puesto = $this.attr('data-puesto');
+                
+                // Asigna los valores a los campos del formulario en el modal
+                $('#personalid').val(personalid);
+                $('#nombre').val(nombre);
+                $('#numero').val(numero);
+                $('#puesto').val(puesto);
+                
+                // Muestra el modal
+                $('#myModal').modal('show');
+            });
+    
+            // Captura el envío del formulario y envía los datos al servidor
+            $('#modal-form').on('submit', function(event) {
+                event.preventDefault();
+                const formData = $(this).serialize();
+                
+                $.ajax({
+                    url: '/updatePersonal/:id',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        // Si la actualización es exitosa, recarga la página para mostrar los cambios
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error al actualizar al Personal:', error);
+                        // Muestra un mensaje de error al usuario
+                        alert('Ocurrió un error al actualizar al Personal');
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
+
+<%- include ('../Sesion.ejs') %>
+</body>
+
+</html>
