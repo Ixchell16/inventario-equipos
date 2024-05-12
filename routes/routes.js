@@ -293,9 +293,9 @@ router.post('/insertarPersonal', registroControllerS.registrarPersonal);
 
 
 //Ruta para eliminar y editar personal
-router.get('/deleteEquipos/:id', deleteControllerS.deleteEquipos);
+router.get('/deleteEquiposS/:id', deleteControllerS.deleteEquipos);
 
-router.post('/updateEquipos/:folio', editControllerS.updateEquipos);
+router.post('/updateEquiposS/:folio', editControllerS.updateEquipos);
 
 router.post('/insertarEquipos', registroControllerS.registrarEquipos);
 
