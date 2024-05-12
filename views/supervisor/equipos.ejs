@@ -154,7 +154,7 @@
 
 <script>
     window.onload = () => {
-        fetch('/equiposJ/marcas')
+        fetch('/equiposS/marcas')
             .then(response => response.json())
             .then(data => {
                 const selectMarca = document.getElementById('marca');
@@ -167,7 +167,7 @@
             })
             .catch(error => console.error('Error al obtener marcas: ', error));
 
-        fetch('/equiposJ/tipo')
+        fetch('/equiposS/tipo')
             .then(response => response.json())
             .then(data => {
                 const selectTipo = document.getElementById('tipo');
@@ -179,7 +179,7 @@
                 });
             })
             .catch(error => console.error('Error al obtener los tipos: ', error));
-        fetch('/equiposJ/marcasM')
+        fetch('/equiposS/marcasM')
             .then(response => response.json())
             .then(data => {
                 const selectMarca = document.getElementById('marcaM');
@@ -192,7 +192,7 @@
             })
             .catch(error => console.error('Error al obtener marcas: ', error));
 
-        fetch('/equiposJ/tipoM')
+        fetch('/equiposS/tipoM')
             .then(response => response.json())
             .then(data => {
                 const selectTipo = document.getElementById('tipoM');
