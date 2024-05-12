@@ -165,7 +165,7 @@
                     selectMarca.appendChild(option);
                 });
             })
-            .catch(error => console.error('Error al obtener marcas: ', error));
+        .catch(error => console.error('Error al obtener marcas: ', error));
 
         fetch('/equiposS/tipo')
             .then(response => response.json())
@@ -178,7 +178,8 @@
                     selectTipo.appendChild(option);
                 });
             })
-            .catch(error => console.error('Error al obtener los tipos: ', error));
+        .catch(error => console.error('Error al obtener los tipos: ', error));
+
         fetch('/equiposS/marcasM')
             .then(response => response.json())
             .then(data => {
@@ -190,7 +191,7 @@
                     selectMarca.appendChild(option);
                 });
             })
-            .catch(error => console.error('Error al obtener marcas: ', error));
+        .catch(error => console.error('Error al obtener marcas: ', error));
 
         fetch('/equiposS/tipoM')
             .then(response => response.json())
@@ -203,7 +204,7 @@
                     selectTipo.appendChild(option);
                 });
             })
-            .catch(error => console.error('Error al obtener los tipos: ', error));
+        .catch(error => console.error('Error al obtener los tipos: ', error));
     };
 </script>
 
