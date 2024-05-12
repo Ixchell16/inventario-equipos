@@ -240,6 +240,20 @@ router.get('/equiposS', autenticacionMiddleware, autorizacionMiddleware(2), most
     });
 });
 
+router.get('/equiposS/marcas', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerMarcas, (req, res) => {
+    res.json(resultados);
+});
+router.get('/equiposS/tipo', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerTipo, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/equiposS/marcasM', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerMarcasM, (req, res) => {
+    res.json(resultados);
+});
+router.get('/equiposS/tipoM', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerTipoM, (req, res) => {
+    res.json(resultados);
+});
+
 //Ruta para eliminar y editar personal
 router.get('/deleteUsers/:id',deleteControllerS.deleteUsers);
 
