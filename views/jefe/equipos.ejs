@@ -25,62 +25,64 @@
             </div>
 
             <div class="col-md-20">
-            <h1> </h1>
-                <br><table class="table" >
-                    <thead class="custom-table table-striped" >
-                        <tr>
-                            <th>Folio Telmex</th>
-                            <th>Numero de Serie</th>
-                            <th>Nombre de la Marca</th>
-                            <th>Tipo de Equipo</th>
-                            <th>Modelo</th>
-                            <th>RAM</th>
-                            <th>Velocidad</th>
-                            <th>Disco Duro</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                        <% if (Array.isArray(results) && results.length > 0) { %>
-                            <tbody>
-                                <% results.forEach((equipos) => { %>
+                <h1> </h1><br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        <thead class="custom-table table-striped" >
+                            <tr>
+                                <th>Folio Telmex</th>
+                                <th>Numero de Serie</th>
+                                <th>Nombre de la Marca</th>
+                                <th>Tipo de Equipo</th>
+                                <th>Modelo</th>
+                                <th>RAM</th>
+                                <th>Velocidad</th>
+                                <th>Disco Duro</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                            <% if (Array.isArray(results) && results.length > 0) { %>
+                                <tbody>
+                                    <% results.forEach((equipos) => { %>
+                                        <tr>
+                                            <td><%= equipos.equiposFolio %></td>
+                                            <td><%= equipos.equiposSerie %></td>
+                                            <td><%= equipos.marcaNombre %></td>
+                                            <td><%= equipos.tipoEquipoNombre %></td>
+                                            <td><%= equipos.equiposmodelo %></td>
+                                            <td><%= equipos.equiposRAM %></td>
+                                            <td><%= equipos.equiposVelocidad %></td>
+                                            <td><%= equipos.equiposDiscoDuro %></td>
+                                            <td>
+                                                <button type="button" data-toggle="modal" data-target="#myModal" 
+                                                data-folio="<%= equipos.equiposFolio %>" 
+                                                data-serie="<%= equipos.equiposSerie %>"
+                                                data-marca="<%= equipos.marcaId %>" 
+                                                data-tipo="<%= equipos.tipoEquipoId %>" 
+                                                data-modelo="<%= equipos.equiposmodelo %>"
+                                                data-ram="<%= equipos.equiposRAM %>"
+                                                data-velo="<%= equipos.equiposVelocidad %>"
+                                                data-disco="<%= equipos.equiposDiscoDuro %>"
+                                                class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                            </td>
+                                            <td>
+                                                <a href="#" data-folio="<%= equipos.equiposFolio %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                                
+                            <% } else { %>
+                                <tbody>
                                     <tr>
-                                        <td><%= equipos.equiposFolio %></td>
-                                        <td><%= equipos.equiposSerie %></td>
-                                        <td><%= equipos.marcaNombre %></td>
-                                        <td><%= equipos.tipoEquipoNombre %></td>
-                                        <td><%= equipos.equiposmodelo %></td>
-                                        <td><%= equipos.equiposRAM %></td>
-                                        <td><%= equipos.equiposVelocidad %></td>
-                                        <td><%= equipos.equiposDiscoDuro %></td>
-                                        <td>
-                                            <button type="button" data-toggle="modal" data-target="#myModal" 
-                                            data-folio="<%= equipos.equiposFolio %>" 
-                                            data-serie="<%= equipos.equiposSerie %>"
-                                            data-marca="<%= equipos.marcaId %>" 
-                                            data-tipo="<%= equipos.tipoEquipoId %>" 
-                                            data-modelo="<%= equipos.equiposmodelo %>"
-                                            data-ram="<%= equipos.equiposRAM %>"
-                                            data-velo="<%= equipos.equiposVelocidad %>"
-                                            data-disco="<%= equipos.equiposDiscoDuro %>"
-                                            class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
-                                        </td>
-                                        <td>
-                                            <a href="#" data-folio="<%= equipos.equiposFolio %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                        </td>
+                                        <td colspan="10">No hay resultados disponibles</td>
                                     </tr>
-                                <% }) %>
-                            </tbody>
-                            
-                        <% } else { %>
-                            <tbody>
-                                <tr>
-                                    <td colspan="10">No hay resultados disponibles</td>
-                                </tr>
-                            </tbody>
-                        <% } %>                        
-                </table>
-            </div>                 
+                                </tbody>
+                            <% } %>                        
+                    </table>
+                </div>  
+            </div>               
         </div>
 
 

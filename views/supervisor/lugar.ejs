@@ -17,40 +17,41 @@
             </div>
 
             <div class="col-md-20">
-            <h1> </h1><br>
-                <table class="table" >
-                    <thead class="custom-table table-striped" >
-                        <tr>
-                            <th>Nombre del Lugar</th>
-                            <th>Nombre del Edicio</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
+                <h1> </h1><br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        <thead class="custom-table table-striped" >
+                            <tr>
+                                <th>Nombre del Lugar</th>
+                                <th>Nombre del Edicio</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
                         <% if (Array.isArray(results) && results.length > 0) { %>
-                            <tbody>
-                                <% results.forEach((lugar) => { %>
-                                    <tr>
-                                        <td><%= lugar.lugarSiglas %></td>
-                                        <td><%= lugar.lugarEdificios %></td>
-                                        <td>
-                                            <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= lugar.lugarId %>" data-siglas="<%= lugar.lugarSiglas %>" data-edificios="<%= lugar.lugarEdificios%>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
-                                        </td>
-                                        <td>
-                                            <a href="#" data-id="<%= lugar.lugarId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                        </td>
-                                    </tr>
-                                <% }) %>
-                            </tbody>
-                            
-                        <% } else { %>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">No hay resultados disponibles</td>
-                                </tr>
-                            </tbody>
-                        <% } %>                        
-                </table>
+                        <tbody>
+                            <% results.forEach((lugar) => { %>
+                            <tr>
+                                <td><%= lugar.lugarSiglas %></td>
+                                <td><%= lugar.lugarEdificios %></td>
+                                <td>
+                                    <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= lugar.lugarId %>" data-siglas="<%= lugar.lugarSiglas %>" data-edificios="<%= lugar.lugarEdificios%>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="<%= lugar.lugarId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                            <% } else { %>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">No hay resultados disponibles</td>
+                            </tr>
+                        </tbody>
+                            <% } %>                        
+                    </table>
+                </div>
             </div>
 
             <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

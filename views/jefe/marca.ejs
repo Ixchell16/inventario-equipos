@@ -18,38 +18,40 @@
             </div>
 
             <div class="col-md-20">
-            <h1> </h1>
-                <br><table class="table" >
-                    <thead class="custom-table table-striped" >
-                        <tr>
-                            <th>Nombre de la Marca</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                        <% if (Array.isArray(results) && results.length > 0) { %>
-                            <tbody>
-                                <% results.forEach((marca) => { %>
+                <h1> </h1><br>
+                <div class="table-responsive">
+                    <table class="table" >
+                        <thead class="custom-table table-striped" >
+                            <tr>
+                                <th>Nombre de la Marca</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                            <% if (Array.isArray(results) && results.length > 0) { %>
+                                <tbody>
+                                    <% results.forEach((marca) => { %>
+                                        <tr>
+                                            <td><%= marca.marcaNombre %></td>
+                                            <td>
+                                                <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= marca.marcaId %>" data-nombre="<%= marca.marcaNombre %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                            </td>
+                                            <td>
+                                                <a href="#" data-id="<%= marca.marcaId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                                
+                            <% } else { %>
+                                <tbody>
                                     <tr>
-                                        <td><%= marca.marcaNombre %></td>
-                                        <td>
-                                            <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= marca.marcaId %>" data-nombre="<%= marca.marcaNombre %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
-                                        </td>
-                                        <td>
-                                            <a href="#" data-id="<%= marca.marcaId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                        </td>
+                                        <td colspan="3">No hay resultados disponibles</td>
                                     </tr>
-                                <% }) %>
-                            </tbody>
-                            
-                        <% } else { %>
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">No hay resultados disponibles</td>
-                                </tr>
-                            </tbody>
-                        <% } %>                        
-                </table>
+                                </tbody>
+                            <% } %>                        
+                    </table>
+                </div>
             </div>                 
         </div>
 

@@ -6,75 +6,79 @@
   
   <%- include ('layouts/dashboard.ejs') %>
 
-  <div class="container mt-5">
-    <div class="col-md-20">
-        <h1>Consulta de Usuarios</h1>
-            <br><table class="table" >
-                <thead class="custom-table table-striped" >
-                    <tr>
-                        <th>Nombre</th>
-                        <th>User</th>
-                        <th>Rol</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
+    <div class="container mt-5">
+        <div class="col-md-20">
+            <h1>Consulta de Usuarios</h1><br>
+            <div class="table-responsive">
+                <table class="table" >
+                    <thead class="custom-table table-striped" >
+                        <tr>
+                            <th>Nombre</th>
+                            <th>User</th>
+                            <th>Rol</th>
+                            <th>Editar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
                     <% if (Array.isArray(results) && results.length > 0) { %>
-                        <tbody>
-                            <% results.forEach((user) => { %>
-                                <tr>
-                                    <td><%= user.usuarioNombre %></td>
-                                    <td><%= user.usuarioUser %></td>
-                                    <td><%= user.rolNombre %></td>
-                                    <td>
-                                        <button type="button" data-toggle="modal" data-target="#myModal" 
+                    <tbody>
+                        <% results.forEach((user) => { %>
+                            <tr>
+                                <td><%= user.usuarioNombre %></td>
+                                <td><%= user.usuarioUser %></td>
+                                <td><%= user.rolNombre %></td>
+                                <td>
+                                    <button type="button" data-toggle="modal" data-target="#myModal" 
                                         data-id="<%= user.usuarioId %>"
                                         data-nombre="<%= user.usuarioNombre %>" 
                                         data-user="<%= user.usuarioUser %>" 
                                         data-rol="<%= user.rolNombre %>"
                                         data-pass="" 
-                                        class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
-                                    </td>
-                                    <td>
-                                        <a href="#" data-id="<%=user.usuarioId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                    </td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                        
-                    <% } else { %>
-                        <tbody>
-                            <tr>
-                                <td colspan="5">No hay resultados disponibles</td>
+                                        class="update-btn btn btn-warning">
+                                        <i class="bi bi-pencil-square"></i>  Editar
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="<%=user.usuarioId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                </td>
                             </tr>
-                        </tbody>
-                    <% } %>                        
-            </table>
-        </div>                 
-    </div>
-  </div>
+                        <% }) %>
+                    </tbody>
+                            
+                        <% } else { %>
+                    <tbody>
+                        <tr>
+                            <td colspan="5">No hay resultados disponibles</td>
+                        </tr>
+                    </tbody>
+                        <% } %>                        
+                </table>
+            </div>                 
+        </div>
+    
 
-  <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Editar Personal</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Personal</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="modal-form" action="/updateUsers/:id" method="POST">
+                            <input type="hidden" name="usersId" id="usersId">
+                            <input type="text" name="nombre" id="nombre" class="form-control" required readonly><br>
+                            <input type="text" name="users" id="users" class="form-control" required readonly><br>
+                            <input type="text" name="rol" id="rol" class="form-control" required readonly><br>
+                            <input type="text" name="contraseña" id="contraseña" class="form-control" placeholder="Ingrese la nueva Contraseña" required><br>
+                            <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <form id="modal-form" action="/updateUsers/:id" method="POST">
-                <input type="hidden" name="usersId" id="usersId">
-                <input type="text" name="nombre" id="nombre" class="form-control" required readonly><br>
-                <input type="text" name="users" id="users" class="form-control" required readonly><br>
-                <input type="text" name="rol" id="rol" class="form-control" required readonly><br>
-                <input type="text" name="contraseña" id="contraseña" class="form-control" placeholder="Ingrese la nueva Contraseña" required><br>
-                <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
-            </form>
-        </div>
-      </div>
     </div>
-  </div>
-  
+</div>
 <!-- Content End -->
 
 <!-- Back to Top -->

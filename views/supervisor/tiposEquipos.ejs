@@ -17,8 +17,9 @@
             </div>
 
             <div class="col-md-20">
-                <h1> </h1>
-                    <br><table class="table" >
+                <h1> </h1><br>
+                <div class="table-responsive">
+                    <table class="table" >
                         <thead class="custom-table table-striped" >
                             <tr>
                                 <th>Nombre del Tipo de Equipo</th>
@@ -26,28 +27,27 @@
                                 <th>Eliminar</th>
                             </tr>
                         </thead>
-                            <% if (Array.isArray(results) && results.length > 0) { %>
-                                <tbody>
-                                    <% results.forEach((tipoEquipos) => { %>
-                                        <tr>
-                                            <td><%= tipoEquipos.tipoEquipoNombre %></td>
-                                            <td>
-                                                <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= tipoEquipos.tipoEquipoId %>" data-nombre="<%= tipoEquipos.tipoEquipoNombre %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
-                                            </td>
-                                            <td>
-                                                <a href="#" data-id="<%= tipoEquipos.tipoEquipoId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                            </td>
-                                        </tr>
-                                    <% }) %>
-                                </tbody>
-                                
-                            <% } else { %>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="3">No hay resultados disponibles</td>
-                                    </tr>
-                                </tbody>
-                            <% } %>                        
+                        <% if (Array.isArray(results) && results.length > 0) { %>
+                        <tbody>
+                            <% results.forEach((tipoEquipos) => { %>
+                            <tr>
+                                <td><%= tipoEquipos.tipoEquipoNombre %></td>
+                                <td>
+                                    <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= tipoEquipos.tipoEquipoId %>" data-nombre="<%= tipoEquipos.tipoEquipoNombre %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="<%= tipoEquipos.tipoEquipoId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>  
+                        <% } else { %>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">No hay resultados disponibles</td>
+                            </tr>
+                        </tbody>
+                        <% } %>                        
                     </table>
                 </div>                 
             </div>
@@ -60,11 +60,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                        <form id="modal-form" action="/updateTipoS/:id" method="POST">
-                            <input type="text" name="nombre" id="nombre" class="form-control" required>
-                            <input type="hidden" name="tipoid" id="tipoid"><br>
-                            <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
-                        </form>
+                            <form id="modal-form" action="/updateTipoS/:id" method="POST">
+                                <input type="text" name="nombre" id="nombre" class="form-control" required>
+                                <input type="hidden" name="tipoid" id="tipoid"><br>
+                                <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -85,13 +85,12 @@
                                     <label for="nombre" class="form-label">Nombre del Tipo de Equipo</label>
                                     <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el tipo de equipo (ejemplo: Certificadora, Laptop)" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- Content End -->
 
