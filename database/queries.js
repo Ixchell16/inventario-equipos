@@ -37,3 +37,26 @@ exports.obtenerTipo = (req, res) => {
         res.json(resultados);
     });
 };
+
+// Función para obtener los select del Modal
+exports.obtenerMarcasM = (req, res) => {
+    conexion.query('SELECT marcaId, marcaNombre FROM marca', (error, resultados) => {
+        if (error) {
+            console.log('Error al obtener marcas: ', error);
+            res.status(500).json({ error: 'Error al obtener marcas' });
+            return;
+        }
+        res.json(resultados);
+    });
+};
+
+exports.obtenerTipoM = (req, res) => {
+    conexion.query('SELECT tipoEquipoId, tipoEquipoNombre FROM tipoEquipo', (error, resultados) => {
+        if (error) {
+            console.log('Error al obtener el tipo: ', error);
+            res.status(500).json({ error: 'Error al obtener el tipo' });
+            return;
+        }
+        res.json(resultados);
+    });
+};

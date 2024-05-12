@@ -137,6 +137,13 @@ router.get('/equiposJ/tipo', autenticacionMiddleware, autorizacionMiddleware(1),
     res.json(resultados);
 });
 
+router.get('/equiposJ/marcasM', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerMarcasM, (req, res) => {
+    res.json(resultados);
+});
+router.get('/equiposJ/tipoM', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerTipoM, (req, res) => {
+    res.json(resultados);
+});
+
 
 //Ruta para eliminar y editar tipos de equipos
 router.get('/deleteTipo/:id', deleteControllerJ.deleteTipo);
@@ -165,7 +172,7 @@ router.post('/updatePersonal/:id', editControllerJ.updatePersonal);
 //Ruta para eliminar y editar personal
 router.get('/deleteEquipos/:id', deleteControllerJ.deleteEquipos);
 
-router.post('/updateEquipos/:id', editControllerJ.updateEquipos);
+router.post('/updateEquipos/:folio', editControllerJ.updateEquipos);
 
 // Ruta para registrar un usuario (POST)
 router.post('/userS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarUsuario, (req, res) => {

@@ -57,8 +57,8 @@
                                             <button type="button" data-toggle="modal" data-target="#myModal" 
                                             data-folio="<%= equipos.equiposFolio %>" 
                                             data-serie="<%= equipos.equiposSerie %>"
-                                            data-marca="<%= equipos.marcaNombre %>" 
-                                            data-tipo="<%= equipos.tipoEquipoNombre %>" 
+                                            data-marca="<%= equipos.marcaId %>" 
+                                            data-tipo="<%= equipos.tipoEquipoId %>" 
                                             data-modelo="<%= equipos.equiposmodelo %>"
                                             data-ram="<%= equipos.equiposRAM %>"
                                             data-velo="<%= equipos.equiposVelocidad %>"
@@ -95,10 +95,10 @@
                     <form id="modal-form" action="/updateEquipos/:id" method="POST">
                         <input type="text" class="form-control" name="folio" id="folio" placeholder="Ingrese el folio telmex del equipo"  maxlength="8" oninput="this.value = this.value.toUpperCase()" required><br>
                         <input type="text" class="form-control" name="serie" id="serie" placeholder="Ingrese el numero de serie del equipo"  maxlength="16" oninput="this.value = this.value.toUpperCase()" required><br>
-                        <select name="marca" id="marca" class="form-control" required>
+                        <select name="marcaM" id="marcaM" class="form-control" required>
                             <option selected>Seleccione la marca del equipo</option>
                         </select><br>
-                        <select name="tipo" id="tipo" class="form-control" required>
+                        <select name="tipoM" id="tipoM" class="form-control" required>
                             <option selected>Seleccione el tipo de equipo</option>
                         </select><br>
                         <input type="text" class="form-control" name="modelo" id="modelo" placeholder="Ingrese el modelo del equipo" required><br>
@@ -152,6 +152,36 @@
             .then(response => response.json())
             .then(data => {
                 const selectTipo = document.getElementById('tipo');
+                data.forEach(tipoEquipo => {
+                    const option = document.createElement('option');
+                    option.value = tipoEquipo.tipoEquipoId;
+                    option.textContent = tipoEquipo.tipoEquipoNombre;
+                    selectTipo.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al obtener los tipos: ', error));
+    };
+</script>
+
+<script>
+    window.onload = () => {
+        fetch('/equiposJ/marcasM')
+            .then(response => response.json())
+            .then(data => {
+                const selectMarca = document.getElementById('marcaM');
+                data.forEach(marca => {
+                    const option = document.createElement('option');
+                    option.value = marca.marcaId;
+                    option.textContent = marca.marcaNombre;
+                    selectMarca.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al obtener marcas: ', error));
+
+        fetch('/equiposJ/tipoM')
+            .then(response => response.json())
+            .then(data => {
+                const selectTipo = document.getElementById('tipoM');
                 data.forEach(tipoEquipo => {
                     const option = document.createElement('option');
                     option.value = tipoEquipo.tipoEquipoId;
@@ -243,8 +273,8 @@
                 const $this = $(this);
                 const folio = $this.attr('data-folio');
                 const serie = $this.attr('data-serie');
-                const marca = $this.attr('data-marca');
-                const tipo = $this.attr('data-tipo');
+                const marcaM = $this.attr('data-marca');
+                const tipoM = $this.attr('data-tipo');
                 const modelo = $this.attr('data-modelo');
                 const ram = $this.attr('data-ram');
                 const velo = $this.attr('data-velo');
@@ -253,8 +283,8 @@
                 // Asigna los valores a los campos del formulario en el modal
                 $('#folio').val(folio);
                 $('#serie').val(serie);
-                $('#marca').val(marca);
-                $('#tipo').val(tipo);
+                $('#marcaM').val(marcaM);
+                $('#tipoM').val(tipoM);
                 $('#modelo').val(modelo);
                 $('#ram').val(ram);
                 $('#velocidad').val(velo);
@@ -270,7 +300,7 @@
                 const formData = $(this).serialize();
                 
                 $.ajax({
-                    url: '/updateEquipos/:id',
+                    url: '/updateEquipos/:folio',
                     method: 'POST',
                     data: formData,
                     success: function(response) {
@@ -280,7 +310,7 @@
                     error: function(xhr, status, error) {
                         console.log('Error al actualizar el Equipo:', error);
                         // Muestra un mensaje de error al usuario
-                        alert('Ocurrió un error al actualizar el Equipo');
+                        //alert('Ocurrió un error al actualizar el Equipo');
                     }
                 });
             });
