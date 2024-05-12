@@ -12,7 +12,7 @@
                 <!-- Botón para mostrar el modal de inserción -->
                 <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modalInsertar">
                     <i class="bi bi-plus-circle-fill"></i>
-                    Insertar Tipo de Equipo
+                    <span class="d-none d-sm-inline">Insertar Tipo de Equipo</span>
                 </button><br>
             </div>
 
@@ -33,10 +33,23 @@
                             <tr>
                                 <td><%= tipoEquipos.tipoEquipoNombre %></td>
                                 <td>
-                                    <button type="button" data-toggle="modal" data-target="#myModal" data-id="<%= tipoEquipos.tipoEquipoId %>" data-nombre="<%= tipoEquipos.tipoEquipoNombre %>" class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                    <button type="button" 
+                                        data-toggle="modal" 
+                                        data-target="#myModal" 
+                                        data-id="<%= tipoEquipos.tipoEquipoId %>" 
+                                        data-nombre="<%= tipoEquipos.tipoEquipoNombre %>" 
+                                        class="update-btn btn btn-warning">
+                                        <i class="bi bi-pencil-square"></i>  
+                                        <span class="d-none d-sm-inline">Editar</span>
+                                    </button>
                                 </td>
                                 <td>
-                                    <a href="#" data-id="<%= tipoEquipos.tipoEquipoId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                    <a href="#" 
+                                        data-id="<%= tipoEquipos.tipoEquipoId %>" 
+                                        class="eliminar-btn btn btn-danger">
+                                        <i class="bi bi-trash3-fill"></i>  
+                                        <span class="d-none d-sm-inline">Eliminar</span>
+                                    </a>
                                 </td>
                             </tr>
                             <% }) %>

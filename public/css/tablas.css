@@ -59,12 +59,3 @@ input[type='submit']{
 	background-color: #a22;
 	color: #fff
 }
-
-@media (max-width: 576px) { /* Definir el tamaño máximo para dispositivos móviles */
-	.eliminar-btn, .update-btn {
-		/* Ocultar el texto en dispositivos móviles */
-		text-indent: -9999px; /* Mover el texto fuera del área visible */
-		overflow: hidden; /* Ocultar cualquier texto que no quepa en el área */
-		white-space: nowrap; /* Evitar que el texto se envuelva */
-	}
-}

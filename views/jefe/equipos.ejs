@@ -56,18 +56,26 @@
                                             <td><%= equipos.equiposDiscoDuro %></td>
                                             <td>
                                                 <button type="button" data-toggle="modal" data-target="#myModal" 
-                                                data-folio="<%= equipos.equiposFolio %>" 
-                                                data-serie="<%= equipos.equiposSerie %>"
-                                                data-marca="<%= equipos.marcaId %>" 
-                                                data-tipo="<%= equipos.tipoEquipoId %>" 
-                                                data-modelo="<%= equipos.equiposmodelo %>"
-                                                data-ram="<%= equipos.equiposRAM %>"
-                                                data-velo="<%= equipos.equiposVelocidad %>"
-                                                data-disco="<%= equipos.equiposDiscoDuro %>"
-                                                class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
+                                                    data-folio="<%= equipos.equiposFolio %>" 
+                                                    data-serie="<%= equipos.equiposSerie %>"
+                                                    data-marca="<%= equipos.marcaId %>" 
+                                                    data-tipo="<%= equipos.tipoEquipoId %>" 
+                                                    data-modelo="<%= equipos.equiposmodelo %>"
+                                                    data-ram="<%= equipos.equiposRAM %>"
+                                                    data-velo="<%= equipos.equiposVelocidad %>"
+                                                    data-disco="<%= equipos.equiposDiscoDuro %>"
+                                                    class="update-btn btn btn-warning">
+                                                    <i class="bi bi-pencil-square"></i>  
+                                                    <span class="d-none d-sm-inline">Editar</span>
+                                                </button>
                                             </td>
                                             <td>
-                                                <a href="#" data-folio="<%= equipos.equiposFolio %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                                <a href="#" 
+                                                    data-folio="<%= equipos.equiposFolio %>" 
+                                                    class="eliminar-btn btn btn-danger">
+                                                    <i class="bi bi-trash3-fill"></i>  
+                                                    <span class="d-none d-sm-inline">Eliminar</span>
+                                                </a>
                                             </td>
                                         </tr>
                                     <% }) %>
