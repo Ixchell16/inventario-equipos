@@ -1,3 +1,5 @@
+//deleteController.js
+
 const conexion = require('../database/db');
 
 exports.deleteTipo = async (req, res) => {
@@ -5,7 +7,7 @@ exports.deleteTipo = async (req, res) => {
     
     try {
         // Eliminar el tipo de equipo de la base de datos
-        await conexion.query('DELETE FROM tipoequipo WHERE tipoEquipoId = ?', [id]);
+        conexion.query('DELETE FROM tipoequipo WHERE tipoEquipoId = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         // Manejar errores
@@ -19,7 +21,7 @@ exports.deleteMarca = async (req, res) => {
     
     try {
         // Eliminar el tipo de equipo de la base de datos
-        await conexion.query('DELETE FROM marca WHERE marcaId = ?', [id]);
+        conexion.query('DELETE FROM marca WHERE marcaId = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         // Manejar errores
@@ -32,7 +34,7 @@ exports.deleteLugar = async (req, res) => {
     const { id } = req.params; 
     try {
         // Eliminar el tipo de equipo de la base de datos
-        await conexion.query('DELETE FROM lugar WHERE lugarId = ?', [id]);
+        conexion.query('DELETE FROM lugar WHERE lugarId = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         // Manejar errores
@@ -45,7 +47,7 @@ exports.deletePersonal = async (req, res) => {
     const { id } = req.params; 
     try {
         // Eliminar el tipo de equipo de la base de datos
-        await conexion.query('DELETE FROM personal WHERE personalId = ?', [id]);
+        conexion.query('DELETE FROM personal WHERE personalId = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         // Manejar errores
@@ -58,7 +60,7 @@ exports.deleteEquipos = async (req, res) => {
     const { id } = req.params; 
     try {
         // Eliminar el tipo de equipo de la base de datos
-        await conexion.query('DELETE FROM equipos WHERE equiposFolio = ?', [id]);
+        conexion.query('DELETE FROM equipos WHERE equiposFolio = ?', [id]);
         res.json({ success: true });
     } catch (error) {
         // Manejar errores

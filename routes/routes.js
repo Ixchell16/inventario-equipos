@@ -65,7 +65,7 @@ router.post('/tiposEquiposJ', autenticacionMiddleware, autorizacionMiddleware(1)
     });
 });
 
-// Ruta para mostrar los tipos de Equipos
+// Ruta para mostrar los lugares
 router.get('/lugarJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarLugar, (req, res) => {
     res.render('jefe/lugar', {
         login: true,
@@ -167,16 +167,6 @@ router.get('/deleteEquipos/:id', deleteControllerJ.deleteEquipos);
 
 router.post('/updateEquipos/:id', editControllerJ.updateEquipos);
 
-
-// Ruta para mostrar la página de registros (GET)
-router.get('/lugarS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerJ.registrarLugar, (req, res) => {
-    res.render('supervisor/lugar', {
-        login: true,
-        name: req.user.name,
-        rol: req.user.rol
-    });
-});
-
 // Ruta para registrar un usuario (POST)
 router.post('/userS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarUsuario, (req, res) => {
     res.render('supervisor/registros', {
@@ -202,10 +192,84 @@ router.get('/consultarUsers', autenticacionMiddleware, autorizacionMiddleware(2)
     });
 });
 
+// Ruta para mostrar los tipos de Equipos
+router.get('/tiposEquiposS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarTipo, (req, res) => {
+    res.render('supervisor/tiposEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/lugarS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarLugar, (req, res) => {
+    res.render('supervisor/lugar', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/marcaS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarMarca, queries.obtenerMarcas,(req, res) => {
+    res.render('supervisor/marca', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/personalS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarPersonal, (req, res) => {
+    res.render('supervisor/personal', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/equiposS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarEquipos, (req, res) => {
+    res.render('supervisor/equipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
 //Ruta para eliminar y editar personal
-router.get('/deleteUsers/:id',deleteControllerS.deleteUsers );
+router.get('/deleteUsers/:id',deleteControllerS.deleteUsers);
 
 router.post('/updateUsers/:id', editControllerS.updateUser);
+
+
+//Ruta para eliminar y editar tipos de equipos
+router.get('/deleteTipoS/:id', deleteControllerS.deleteTipo);
+
+router.post('/updateTipoS/:id', editControllerS.updateTipo);
+
+router.post('/insertarTipo', registroControllerS.registrarTipo);
+
+
+//Ruta para eliminar y editar marcas
+router.get('/deleteMarcaS/:id', deleteControllerS.deleteMarca);
+
+router.post('/updateMarcaS/:id', editControllerS.updateMarca);
+
+router.post('/insertarMarca', registroControllerS.registrarMarca);
+
+
+//Ruta para eliminar y editar lugar
+router.get('/deleteLugarS/:id', deleteControllerS.deleteLugar);
+
+router.post('/updateLugarS/:id', editControllerS.updateLugar);
+
+router.post('/insertarLugar', registroControllerS.registrarLugar);
+
+
+//Ruta para eliminar y editar personal
+router.get('/deletePersonalS/:id', deleteControllerS.deletePersonal);
+
+router.post('/updatePersonalS/:id', editControllerS.updatePersonal);
+
+router.post('/insertarPersonal', registroControllerS.registrarPersonal);
+
 
 // Ruta protegida para el index del jefe (requiere autenticación y rol de jefe)
 router.get('/indexJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {

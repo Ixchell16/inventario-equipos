@@ -1,3 +1,5 @@
+//registroControllerJ
+
 const conexion = require('../database/db');
 
 exports.registrarTipo = async (req, res) => {

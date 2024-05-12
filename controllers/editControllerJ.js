@@ -1,3 +1,5 @@
+//editController.js
+
 const conexion = require('../database/db');
 
 exports.updateTipo = async (req, res) => {
