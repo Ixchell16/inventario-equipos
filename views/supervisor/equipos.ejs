@@ -269,7 +269,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
-                            fetch(`/deleteEquipos/${id}`, {
+                            fetch(`/deleteEquiposS/${id}`, {
                                 method: 'GET'
                             })
                             .then(response => {
@@ -338,7 +338,7 @@
                 const formData = $(this).serialize();
                 
                 $.ajax({
-                    url: '/updateEquipos/:folio',
+                    url: '/updateEquiposS/:folio',
                     method: 'POST',
                     data: formData,
                     success: function(response) {
