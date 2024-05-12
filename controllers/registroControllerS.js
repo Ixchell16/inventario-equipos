@@ -306,3 +306,72 @@ exports.registrarPersonal = async (req, res) => {
         res.render('errores/error');
     }
 };
+exports.registrarEquipos = async (req, res) => {
+    const nuevoFolio = req.body.folio;
+    const nuevaSerie = req.body.serie;
+    const nuevaMarca = req.body.marca;
+    const nuevoTipo = req.body.tipo;
+    const nuevoModelo = req.body.modelo;
+    const nuevaRAM = req.body.ram;
+    const nuevaVelocidad = req.body.velocidad;
+    const nuevoDisco = req.body.disco;
+
+    try {
+        // Verificar si el equipo ya existe
+        conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? AND equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+            if (error) {
+                console.error('Error al verificar si el equipo existe:', error);
+                return res.render('errores/error');
+            }
+
+            // Si el equipo ya existe, mostrar un mensaje de error
+            if (results.length > 0) {
+                return res.render('supervisor/equipos', {  
+                    results: results,
+                    name: req.session.name,
+                    alert: true,
+                    alertTitle: "Error al Insertar",
+                    alertMessage: "Este equipo ya existe",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'equiposS'
+                });
+            }
+
+            // Si el equipo no existe, insertarlo en la base de datos
+            conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposmodelo, equiposRAM, equiposVelocidad, equiposDiscoDuro) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+                [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco], 
+                (error, insertResult) => {
+                    if (error) {
+                        console.error('Error al insertar el equipo:', error);
+                        return res.render('errores/error');
+                    }
+
+                    // Después de la inserción exitosa, realizar una nueva consulta para obtener todos los equipos existentes
+                    conexion.query('SELECT * FROM equipos', (error, equipos) => {
+                        if (error) {
+                            console.error('Error al obtener los equipos:', error);
+                            return res.render('errores/error');
+                        }
+
+                        // Mostrar mensaje de éxito y todos los equipos obtenidos
+                        res.render('supervisor/equipos', { 
+                            results: equipos,
+                            name: req.session.name,
+                            alert: true,
+                            alertTitle: "Inserción Completada",
+                            alertMessage: "Se insertó correctamente el equipo",
+                            alertIcon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ruta: 'equiposS'
+                        });
+                    });
+                });
+        });
+    } catch (error) {
+        console.error('Error en el controlador:', error);
+        res.render('errores/error');
+    }
+};

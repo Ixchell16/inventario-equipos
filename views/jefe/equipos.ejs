@@ -66,7 +66,7 @@
                                             class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
                                         </td>
                                         <td>
-                                            <a href="#" data-id="<%= equipos.equiposFolio %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
+                                            <a href="#" data-folio="<%= equipos.equiposFolio %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
                                         </td>
                                     </tr>
                                 <% }) %>
@@ -133,6 +133,7 @@
 <script src="resources/js/main.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     window.onload = () => {
         fetch('/equiposJ/marcas')
@@ -160,11 +161,6 @@
                 });
             })
             .catch(error => console.error('Error al obtener los tipos: ', error));
-    };
-</script>
-
-<script>
-    window.onload = () => {
         fetch('/equiposJ/marcasM')
             .then(response => response.json())
             .then(data => {

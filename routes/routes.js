@@ -278,6 +278,13 @@ router.post('/updatePersonalS/:id', editControllerS.updatePersonal);
 router.post('/insertarPersonal', registroControllerS.registrarPersonal);
 
 
+//Ruta para eliminar y editar personal
+router.get('/deleteEquipos/:id', deleteControllerS.deleteEquipos);
+
+router.post('/updateEquipos/:folio', editControllerS.updateEquipos);
+
+router.post('/insertarEquipos', registroControllerS.registrarEquipos);
+
 // Ruta protegida para el index del jefe (requiere autenticación y rol de jefe)
 router.get('/indexJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
     res.render('jefe/index', {
