@@ -31,7 +31,8 @@
                                         data-id="<%= user.usuarioId %>"
                                         data-nombre="<%= user.usuarioNombre %>" 
                                         data-user="<%= user.usuarioUser %>" 
-                                        data-rol="<%= user.rolNombre %>" 
+                                        data-rol="<%= user.rolNombre %>"
+                                        data-pass="" 
                                         class="update-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</button>
                                     </td>
                                     <td>
@@ -63,9 +64,9 @@
         <div class="modal-body">
             <form id="modal-form" action="/updateUsers/:id" method="POST">
                 <input type="hidden" name="usersId" id="usersId">
-                <input type="text" name="nombre" id="nombre" class="form-control" required><br>
-                <input type="text" name="users" id="users" class="form-control" required><br>
-                <input type="text" name="rol" id="rol" class="form-control" required><br>
+                <input type="text" name="nombre" id="nombre" class="form-control" required readonly><br>
+                <input type="text" name="users" id="users" class="form-control" required readonly><br>
+                <input type="text" name="rol" id="rol" class="form-control" required readonly><br>
                 <input type="text" name="contraseña" id="contraseña" class="form-control" placeholder="Ingrese la nueva Contraseña" required><br>
                 <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
             </form>
@@ -167,54 +168,55 @@ Swal.fire({
 <% }) %>
 
 <script>
-$(function(){
-    $('[data-toggle="tooltip"]').tooltip({
-        Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-    })
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        })
 
-    $(document).on('click', '.update-btn', function(){
-        const $this = $(this);
-        const usersid = $this.attr('data-id');
-        const nombre = $this.attr('data-nombre');
-        const users = $this.attr('data-user');
-        const rol = $this.attr('data-rol');
-        const pass = $this.attr('data-pass');
-        
-        // Asigna los valores a los campos del formulario en el modal
-        $('#usersId').val(usersid);
-        $('#nombre').val(nombre);
-        $('#users').val(users);
-        $('#rol').val(rol);
-        $('#contraseña').val(pass);
-        
-        // Muestra el modal
-        $('#myModal').modal('show');
-    });
+        $(document).on('click', '.update-btn', function(){
+            const $this = $(this);
+            const usersid = $this.attr('data-id');
+            const nombre = $this.attr('data-nombre');
+            const users = $this.attr('data-user');
+            const rol = $this.attr('data-rol');
+            const pass = $this.attr('data-pass');
+            
+            // Asigna los valores a los campos del formulario en el modal
+            $('#usersId').val(usersid);
+            $('#nombre').val(nombre);
+            $('#users').val(users);
+            $('#rol').val(rol);
+            $('#contraseña').val(pass);
+            
+            // Muestra el modal
+            $('#myModal').modal('show');
+        });
 
-    // Captura el envío del formulario y envía los datos al servidor
-    $('#modal-form').on('submit', function(event) {
-        event.preventDefault();
-        const formData = $(this).serialize();
-        
-        $.ajax({
-            url: '/updateUsers/:id',
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                // Si la actualización es exitosa, recarga la página para mostrar los cambios
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log('Error al actualizar al Personal:', error);
-                // Muestra un mensaje de error al usuario
-                alert('Ocurrió un error al actualizar al Personal');
-            }
+        // Captura el envío del formulario y envía los datos al servidor
+        $('#modal-form').on('submit', function(event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            
+            $.ajax({
+                url: '/updateUsers/:id',
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Si la actualización es exitosa, recarga la página para mostrar los cambios
+                    alert(response.message);
+                    window.location.href = '/consultarUsers';
+                },
+                error: function(xhr, status, error) {
+                    // Maneja errores si la solicitud falla
+                    console.log('Error en la solicitud AJAX:', error);
+                    
+                    // Muestra un mensaje de error al usuario
+                    alert('Hubo un error al actualizar el usuario. Por favor, inténtalo de nuevo más tarde.');
+                }
+            });
         });
     });
-});
 </script>
-
-
 
 <%- include ('../Sesion.ejs') %>
 </body>

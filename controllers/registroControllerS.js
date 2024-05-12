@@ -15,6 +15,8 @@ exports.mostrarRegistros = async (req, res) => {
         console.error('Error al obtener roles:', error);
     }
 };
+
+
 exports.registrarUsuario = async (req, res) => {
     const usuario = req.body.user;
     const name = req.body.name;
@@ -38,7 +40,7 @@ exports.registrarUsuario = async (req, res) => {
         // Realizar la consulta para recuperar los roles
         const roles = await obtenerRoles();
         const options = roles.map(rol => `<option value="${rol.rolId}">${rol.rolNombre}</option>`);
-        const selectElement = `<select name="rol" id="rol" class="select-css">
+        const selectElement = `<select class="form-control mb-3" name="rol" id="rol" class="select-css">
             <option value="">Selecciona el Rol</option>
             ${options.join('')}
             </select>`;
