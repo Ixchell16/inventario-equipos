@@ -35,13 +35,31 @@
                             <tbody>
                                 <% results.forEach((Asignacion) => { %>
                                     <tr>
-                                        <td><%= tipoEquipos.tipoEquipoNombre %></td>
-                                        <!--<td>
-                                         <a href="#" data-id="<%= tipoEquipos.tipoEquipoId %>" class="editar-btn btn btn-warning"><i class="bi bi-pencil-square"></i>  Editar</a>
+                                        <td><%= Asignacion.asignarEquiposId %></td>
+                                        <td><%= Asignacion.equiposFolio %></td>
+                                        <td><%= Asignacion.equiposSerie %></td>
+                                        <td><%= Asignacion.tipoEquipoNombre %></td>
+                                        <td><%= Asignacion.tipoEquipoModelo %></td>
+                                        <td><%= Asignacion.marcaNombre %></td>
+                                        <td><%= Asignacion.equiposRam %></td>
+                                        <td><%= Asignacion.equiposVelocidad %></td>
+                                        <td><%= Asignacion.equiposDiscoDuro %></td>
+                                        <td><%= Asignacion.personalNombre %></td>
+                                        <td><%= Asignacion.usuarioNombre %></td>
+                                        <td><%= Asignacion.lugarSiglas %></td>
+                                        <td><%= Asignacion.lugarEdificios %></td>
+                                        <td><%= Asignacion.asignarEquiposFecha %></td>
+                                        <td><%= Asignacion.asignarEquiposEstados %></td>
+                                         <a href="#" 
+                                            data-id="<%= tipoEquipos.asignarEquipos %>" 
+                                            class="editar-btn btn btn-warning">
+                                            <i class="bi bi-pencil-square"></i>
+                                              Editar
+                                        </a>
                                         </td>
                                         <td>
                                             <a href="#" data-id="<%= tipoEquipos.tipoEquipoId %>" class="eliminar-btn btn btn-danger"><i class="bi bi-trash3-fill"></i>  Eliminar</a>
-                                        </td>-->
+                                        </td>
                                     </tr>
                                 <% }) %>
                             </tbody>

@@ -60,3 +60,78 @@ exports.obtenerTipoM = (req, res) => {
         res.json(resultados);
     });
 };
+
+exports.obtenerEquiposFolio = (req, res) => {
+    conexion.query('SELECT equiposFolio FROM equipos', (error, resultados) => {
+        if (error) {
+            console.log('Error al obtener el folio: ', error);
+            res.status(500).json({ error: 'Error al obtener el folio' });
+            return;
+        }
+        res.json(resultados);
+    });
+};
+
+exports.obtenerEquipos = (req, res) => {
+    try {
+        const folio = req.params.folio; // Obtener el folio del parámetro de la ruta
+        conexion.query('SELECT e.equiposSerie AS equiposSerie, m.marcaNombre AS marcaNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro FROM equipos e JOIN marca m ON e.marcaId = m.marcaId JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId WHERE e.equiposFolio = ?', [folio], (error, resultados) => {
+            if (error) {
+                console.error('Error al obtener el equipo:', error);
+                return res.status(500).json({ mensaje: 'Error interno del servidor' });
+            }
+            if (resultados.length === 0) {
+                return res.status(404).json({ mensaje: 'Equipo no encontrado' });
+            }
+            // Como solo esperamos un equipo por folio, tomamos el primer resultado
+            const equipo = resultados[0];
+            res.json(equipo); // Enviar los datos del equipo como respuesta
+        });
+    } catch (error) {
+        console.error('Error al obtener el equipo:', error);
+        res.status(500).json({ mensaje: 'Error interno del servidor' });
+    }
+};
+
+exports.obtenerPersonal = (req, res) => {
+    conexion.query('SELECT personalId, personalNombre FROM personal', (error, resultados) => {
+        if (error) {
+            console.log('Error al obtener al personal: ', error);
+            res.status(500).json({ error: 'Error al obtener al personal' });
+            return;
+        }
+        res.json(resultados);
+    });
+};
+
+exports.obtenerLugarId = (req, res) => {
+    conexion.query('SELECT lugarId, lugarSiglas FROM lugar', (error, resultados) => {
+        if (error) {
+            console.log('Error al obtener el lugar: ', error);
+            res.status(500).json({ error: 'Error al obtener el lugar' });
+            return;
+        }
+        res.json(resultados);
+    });
+};
+
+exports.obtenerLugar = (req, res) => {
+    try {
+        const id = req.params.id; // Obtener el folio del parámetro de la ruta
+        conexion.query('SELECT lugarEdificios FROM lugar where lugarId', [id], (error, resultados) => {
+            if (error) {
+                console.error('Error al obtener el equipo:', error);
+                return res.status(500).json({ mensaje: 'Error interno del servidor' });
+            }
+            if (resultados.length === 0) {
+                return res.status(404).json({ mensaje: 'Equipo no encontrado' });
+            }
+            // Como solo esperamos un equipo por folio, tomamos el primer resultado
+            const equipo = resultados[0];
+            res.json(equipo); // Enviar los datos del equipo como respuesta
+        });
+    } catch (error) {
+        console.error('Error al obtener el equipo:', error);
+        res.status(500).json({ mensaje: 'Error interno del servidor' });
+    }
+};

@@ -23,6 +23,38 @@ const mostrarControllerS = require('../controllers/mostrarControllerS');
 const deleteControllerS = require('../controllers/deleteControllerS');
 const editControllerS = require('../controllers/editControllerS')
 
+router.get('/asignacionJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
+    res.render('jefe/asignacionEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.post('/asignacionJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
+    res.render('jefe/asignacionEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/asignacion/folio', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerEquiposFolio, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacion/equipo/:folio', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerEquipos);
+
+router.get('/asignacion/personal', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerPersonal, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacion/lugar', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerLugarId, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacion/lugar/:id', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerLugar);
+
 // Ruta para mostrar los tipos de Equipos
 router.get('/consultaAsigacion', autenticacionMiddleware, autorizacionMiddleware(1),mostrarControllerJ.mostrarAsignacion, (req, res) => {
     res.render('jefe/consultaAsignacion', {
@@ -34,14 +66,6 @@ router.get('/consultaAsigacion', autenticacionMiddleware, autorizacionMiddleware
 
 router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBajas, (req, res) => {
     res.render('jefe/bajasEquipos', {
-        login: true,
-        name: req.user.name,
-        rol: req.user.rol
-    });
-});
-
-router.get('/asignacionEquipos', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
-    res.render('jefe/insertarAsignacion', {
         login: true,
         name: req.user.name,
         rol: req.user.rol
