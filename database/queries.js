@@ -118,13 +118,13 @@ exports.obtenerLugarId = (req, res) => {
 exports.obtenerLugar = (req, res) => {
     try {
         const id = req.params.id; // Obtener el folio del parámetro de la ruta
-        conexion.query('SELECT lugarEdificios FROM lugar where lugarId', [id], (error, resultados) => {
+        conexion.query('SELECT lugarEdificios FROM lugar WHERE lugarId = ?', [id], (error, resultados) => {
             if (error) {
                 console.error('Error al obtener el equipo:', error);
                 return res.status(500).json({ mensaje: 'Error interno del servidor' });
             }
             if (resultados.length === 0) {
-                return res.status(404).json({ mensaje: 'Equipo no encontrado' });
+                return res.status(404).json({ mensaje: 'Lugar no encontrado' });
             }
             // Como solo esperamos un equipo por folio, tomamos el primer resultado
             const equipo = resultados[0];
