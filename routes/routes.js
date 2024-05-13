@@ -31,7 +31,7 @@ router.get('/asignacionJ', autenticacionMiddleware, autorizacionMiddleware(1), (
     });
 });
 
-router.post('/asignacionJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
+router.post('/asignacionJ', autenticacionMiddleware, autorizacionMiddleware(1), registroControllerJ.registrarAsignacion, (req, res) => {
     res.render('jefe/asignacionEquipos', {
         login: true,
         name: req.user.name,
