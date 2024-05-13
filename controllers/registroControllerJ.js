@@ -352,31 +352,39 @@ exports.registrarAsignacion = async (req, res) => {
                 });
             }
 
-            // Si el equipo no ha sido asignado, insertarlo en la base de datos
-            conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, asignarEquiposEstado, usuarioId) VALUES (?, ?, ?, ?, ?, ?)', 
-                [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, nuevoEstado, usuario], 
-                (error, insertResult) => {
-                    if (error) {
-                        console.error('Error al asignar el equipo:', error);
-                        return res.render('errores/error');
-                    } else{
-                        // Mostrar mensaje de éxito y todos los equipos obtenidos
-                        res.render('jefe/asignacionEquipos', { 
-                            results: equipos,
-                            name: req.session.name,
-                            alert: true,
-                            alertTitle: "Inserción Completada",
-                            alertMessage: "Se asigno correctamente el equipo al usuario",
-                            alertIcon: 'success',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            ruta: 'asignacionJ'
-                        });
-                    }
+            conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [usuario], (error, userResult) => {
+                if (error) {
+                    console.error('Error al obtener el ID de usuario:', error);
+                    return res.render('errores/error');
+                }
+                const usuarioId = userResult[0].usuarioId;
+
+            
+                // Si el equipo no ha sido asignado, insertarlo en la base de datos
+                conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, asignarEquiposEstado, usuarioId) VALUES (?, ?, ?, ?, ?, ?)', 
+                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, nuevoEstado, usuarioId], 
+                    (error, insertResult) => {
+                        if (error) {
+                            console.error('Error al asignar el equipo:', error);
+                            return res.render('errores/error');
+                        } else{
+                            // Mostrar mensaje de éxito y todos los equipos obtenidos
+                            res.render('jefe/asignacionEquipos', {
+                                name: req.session.name,
+                                alert: true,
+                                alertTitle: "Inserción Completada",
+                                alertMessage: "Se asigno correctamente el equipo al usuario",
+                                alertIcon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                ruta: 'asignacionJ'
+                            });
+                        }
+                    });
                 });
-        });
-    } catch (error) {
-        console.error('Error en el controlador:', error);
-        res.render('errores/error');
-    }
-};
+            })
+        } catch (error) {
+            console.error('Error en el controlador:', error);
+            res.render('errores/error');
+        }
+    };
