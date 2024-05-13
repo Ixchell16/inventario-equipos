@@ -375,3 +375,71 @@ exports.registrarEquipos = async (req, res) => {
         res.render('errores/error');
     }
 };
+
+exports.registrarAsignacion = async (req, res) => {
+    const nuevoFolio = req.body.folio;
+    const nuevoPersonal = req.body.personal;
+    const nuevoLugar = req.body.lugar;
+    const nuevaFecha = req.body.fecha;
+    const nuevoEstado = req.body.estado;
+    const usuario = req.session.name;
+
+    try {
+        // Verificar si la asignación ya existe
+        conexion.query('SELECT * FROM asignarEquipos WHERE equiposFolio = ?', [nuevoFolio], (error, results) => {
+            if (error) {
+                console.error('Error al verificar si la asignación existe:', error);
+                return res.render('errores/error');
+            }
+
+            // Si el equipo ya existe, mostrar un mensaje de error
+            if (results.length > 0) {
+                return res.render('supervisor/asignacionEquipos', {  
+                    results: results,
+                    name: req.session.name,
+                    alert: true,
+                    alertTitle: "Error al Asignar este equipo",
+                    alertMessage: "Este equipo ya fue asignado a otra persona",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'asignacionS'
+                });
+            }
+
+            conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [usuario], (error, userResult) => {
+                if (error) {
+                    console.error('Error al obtener el ID de usuario:', error);
+                    return res.render('errores/error');
+                }
+                const usuarioId = userResult[0].usuarioId;
+
+            
+                // Si el equipo no ha sido asignado, insertarlo en la base de datos
+                conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, asignarEquiposEstado, usuarioId) VALUES (?, ?, ?, ?, ?, ?)', 
+                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, nuevoEstado, usuarioId], 
+                    (error, insertResult) => {
+                        if (error) {
+                            console.error('Error al asignar el equipo:', error);
+                            return res.render('errores/error');
+                        } else{
+                            // Mostrar mensaje de éxito y todos los equipos obtenidos
+                            res.render('supervisor/asignacionEquipos', {
+                                name: req.session.name,
+                                alert: true,
+                                alertTitle: "Inserción Completada",
+                                alertMessage: "Se asigno correctamente el equipo al usuario",
+                                alertIcon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                ruta: 'asignacionS'
+                            });
+                        }
+                    });
+                });
+            })
+        } catch (error) {
+            console.error('Error en el controlador:', error);
+            res.render('errores/error');
+        }
+    };

@@ -64,6 +64,48 @@ router.get('/consultaAsigacion', autenticacionMiddleware, autorizacionMiddleware
     });
 });
 
+// Ruta para mostrar los tipos de Equipos
+router.get('/consultaAsigacionS', autenticacionMiddleware, autorizacionMiddleware(2),mostrarControllerS.mostrarAsignacion, (req, res) => {
+    res.render('supervisor/consultaAsignacion', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/asignacionS', autenticacionMiddleware, autorizacionMiddleware(2), (req, res) => {
+    res.render('supervisor/asignacionEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.post('/asignacionS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarAsignacion, (req, res) => {
+    res.render('supervisor/asignacionEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/asignacionS/folio', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerEquiposFolio, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacionS/equipo/:folio', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerEquipos);
+
+router.get('/asignacionS/personal', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerPersonal, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacionS/lugar', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerLugarId, (req, res) => {
+    res.json(resultados);
+});
+
+router.get('/asignacionS/lugar/:id', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerLugar);
+
+
 router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBajas, (req, res) => {
     res.render('jefe/bajasEquipos', {
         login: true,
