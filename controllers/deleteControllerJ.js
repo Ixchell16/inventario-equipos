@@ -56,19 +56,19 @@ exports.deletePersonal = async (req, res) => {
     }
 }
 
-exports.deleteEquipos = async (req, res) => {
+exports.bajaEquipos = async (req, res) => {
     const { id } = req.params; 
     try {
         // Verificar si el equipo ha sido asignado
         const equipoAsignado = await verificarAsignacion(id);
         if (equipoAsignado) {
             // Si el equipo ha sido asignado, enviar un mensaje de error al cliente
-            res.status(400).json({ error: 'No se puede eliminar el equipo porque está asignado.' });
+            res.status(400).json({ errsor: 'No se puede eliminar el equipo porque está asignado.' });
             return;
         }
         
         // Si el equipo no ha sido asignado, eliminarlo de la base de datos
-        conexion.query('DELETE FROM equipos WHERE equiposFolio = ?', [id], (error, results) => {
+        conexion.query('UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', ['2',id], (error, results) => {
             if (error) {
                 console.error('Error al eliminar el equipo:', error);
                 res.status(500).json({ error: 'Ocurrió un error al eliminar el equipo.' });
@@ -87,7 +87,7 @@ exports.deleteEquipos = async (req, res) => {
 // Función para verificar si un equipo ha sido asignado
 async function verificarAsignacion(idEquipo) {
     return new Promise((resolve, reject) => {
-        conexion.query('SELECT * FROM asignarEquipos WHERE equiposFolio = ?', [idEquipo], (error, results) => {
+        conexion.query('SELECT * FROM asignarEquipos WHERE estadoId = 3 AND asignarEuiqpoId', [idEquipo], (error, results) => {
             if (error) {
                 reject(error);
             } else {

@@ -239,7 +239,7 @@ router.post('/updatePersonal/:id', editControllerJ.updatePersonal);
 
 
 //Ruta para eliminar y editar personal
-router.get('/deleteEquipos/:id', deleteControllerJ.deleteEquipos);
+router.get('/deleteEquipos/:id', deleteControllerJ.bajaEquipos);
 
 router.post('/updateEquipos/:folio', editControllerJ.updateEquipos);
 

@@ -49,7 +49,7 @@
                                         <!-- Formatear la fecha al formato "yyyy-MM-dd" -->
                                         <% const fecha = new Date(Asignacion.asignarEquiposFecha); %>
                                         <td><%= fecha.toISOString().split('T')[0] %></td>
-                                        <td><%= Asignacion.asignarEquiposEstado %></td>
+                                        <td><%= Asignacion.estadoNombre %></td>
                                         <td>
                                             <button type="button" 
                                                 data-id="<%= Asignacion.asignarEquiposId %>"
@@ -69,7 +69,7 @@
                                                 data-edificio="<%= Asignacion.lugarEdificios %>"
 
                                                 data-fecha="<%= Asignacion.asignarEquiposFecha %>"
-                                                data-estado="<%= Asignacion.asignarEquiposEstado %>"
+                                                data-estado="<%= Asignacion.estadoNombre %>"
                                                 class="update-btn btn btn-warning">
                                                 <i class="bi bi-pencil-square"></i>
                                                 <span class="d-none d-sm-inline">Editar</span>

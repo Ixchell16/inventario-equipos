@@ -62,7 +62,7 @@ exports.obtenerTipoM = (req, res) => {
 };
 
 exports.obtenerEquiposFolio = (req, res) => {
-    conexion.query('SELECT equiposFolio FROM equipos', (error, resultados) => {
+    conexion.query('SELECT equiposFolio FROM equipos WHERE estadoId = 1', (error, resultados) => {
         if (error) {
             console.log('Error al obtener el folio: ', error);
             res.status(500).json({ error: 'Error al obtener el folio' });

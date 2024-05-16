@@ -13,7 +13,6 @@
             <table class="table" >
                 <thead class="custom-table table-striped" >
                     <tr>
-                        <th></th>
                         <th>Folio Telmex</th>
                         <th>Numero de Serie</th>
                         <th>Nombre de la Marca</th>
@@ -22,14 +21,15 @@
                         <th>RAM</th>
                         <th>Velocidad</th>
                         <th>Disco Duro</th>
+                        <th>Estado</th>
                         <th>Editar</th>
+                        <th>Alta</th>
                     </tr>
                 </thead>
                 <% if (Array.isArray(results) && results.length > 0) { %>
                 <tbody>
                 <% results.forEach((equipos) => { %>
                     <tr>
-                        <td><input type="checkbox" class="form-check-input rowCheckbox" name="selectedEquipos[]" value="<%= equipos.id %>"></td>
                         <td><%= equipos.equiposFolio %></td>
                         <td><%= equipos.equiposSerie %></td>
                         <td><%= equipos.marcaNombre %></td>
@@ -38,6 +38,7 @@
                         <td><%= equipos.equiposRam %></td>
                         <td><%= equipos.equiposVelocidad %></td>
                         <td><%= equipos.equiposDiscoDuro %></td>
+                        <td><%= equipos.estadoNombre %></td>
                         <td>
                             <button type="button" data-toggle="modal" data-target="#myModal" 
                                 data-folio="<%= equipos.equiposFolio %>" 
@@ -53,6 +54,14 @@
                                 <span class="d-none d-sm-inline">Editar</span>
                             </button>
                         </td>
+                        <td>
+                            <a href="#" 
+                                data-folio="<%= equipos.equiposFolio %>" 
+                                class="alta-btn btn btn-success">
+                                <i class="bi bi-trash3-fill"></i>  
+                                <span class="d-none d-sm-inline">Dar de Alta</span>
+                            </a>
+                        </td>
                     </tr>
                 <% }) %>
                 </tbody>    
@@ -62,20 +71,7 @@
                         <td colspan="10">No hay resultados disponibles</td>
                     </tr>
                 </tbody>
-                <% } %>  
-                <tfoot> <!-- Sección para el botón de dar de baja -->
-                    <tr>
-                        <td colspan="17">
-                            <button 
-                                type="button" 
-                                id="darDeBajaBtn" 
-                                class="eliminar-btn btn btn-danger">
-                                <i class="bi bi-trash3-fill"></i>
-                                <span class="d-none d-sm-inline">Dar de baja equipos seleccionados</span>
-                            </button>
-                        </td>
-                    </tr>
-                </tfoot>                       
+                <% } %>                      
             </table>
         </div>
     </div>
@@ -291,71 +287,59 @@
     });
 </script>
 
-<!-- Eliminar -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script>
-    // Función para verificar si al menos un checkbox está marcado
-    function alMenosUnoMarcado() {
-        const checkboxes = document.querySelectorAll('.rowCheckbox');
-        for (let i = 0; i < checkboxes.length; i++) {
-            if (checkboxes[i].checked) {
-                return true;
-            }
-        }
-        return false;
-    }
-    // Evento para el botón de dar de baja equipos seleccionados
-    document.getElementById('darDeBajaBtn').addEventListener('click', function(event) {
-        if (alMenosUnoMarcado()) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Esta acción dará de baja los equipos seleccionados',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, dar de baja',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
-                    fetch(`/bajaAsignacion/${id}`, {
-                            method: 'GET'
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Error al dar de baja el equipo');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            // Si la eliminación es exitosa, recargar la página para mostrar los cambios
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            console.error('Error al dar de baja la asignación:', error);
-                            console.log(error);
-                            // Mostrar un mensaje de error al usuario
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'Ocurrió un error al eliminar el tipo de equipo',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
+    <!-- Baja -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <% results.forEach((equipos) => { %>
+        <script>
+            document.querySelectorAll('.alta-btn').forEach(btn => {
+                btn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+                    const id = this.getAttribute('data-folio');
+        
+                    // Mostrar la alerta SweetAlert para confirmar la eliminación
+                    Swal.fire({
+                        title: '¿Estas seguro?',
+                        text: 'Esta acción dara de alta al equipo',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f9632',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, dar de alta',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
+                            fetch(`/altaEquipos/${id}`, {
+                                method: 'GET'
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Error al dar de alta el equipo');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Si la eliminación es exitosa, recargar la página para mostrar los cambios
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.error('Error al eliminar al equipo:', error);
+                                console.log(error);
+                                // Mostrar un mensaje de error al usuario
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al eliminar al personal',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
                             });
-                        });
-                }
+                        }
+                    });
+                });
             });
-        } else {
-            // Si ningún checkbox está marcado, mostrar un mensaje de alerta
-            Swal.fire({
-                icon: 'error',
-                title: '¡Ups hubo un error!',
-                text: 'Debes seleccionar al menos un equipo para dar de baja.',
-            });
-        }
-    });
-</script>
-
+        </script>
+        
+    <% }) %>
 
 <%- include ('../Sesion.ejs') %>
 </body>
