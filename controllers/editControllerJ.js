@@ -84,18 +84,44 @@ exports.updateEquipos = async (req, res) => {
     const {folio, serie, marcaM, tipoM, modelo, ram, velocidad, disco } = req.body;
     try {
         // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
-        conexion.query('UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ? WHERE equiposFolio = ?',
-        [serie, marcaM, tipoM, modelo, ram, velocidad, disco, folio], (error, results) => {
+        conexion.query('UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ?, estadoId = ? WHERE equiposFolio = ?',
+        [serie, marcaM, tipoM, modelo, ram, velocidad, disco,'1' ,folio], (error, results) => {
             if (error) {
                 console.log('Error al actualizar al equipo:', error);
                 res.render('errores/error');
             } else {
                 // Redirigir a la página de tipos de equipos después de la actualización
-                res.redirect('/equiposS');
+                res.redirect('/equiposJ');
             }
         });
     } catch (error) {
         console.log('Error al actualizar al equipo:', error);
         res.render('errores/error');
+    }
+};
+
+exports.updateAsignacion = async (req, res) => {
+    const {id, folio, personal, lugar, fecha, estado } = req.body;
+    const user =req.session.name
+    try{
+        conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [user], (error, userResult) => {
+            if (error) {
+                console.error('Error al obtener el ID de usuario:', error);
+                return res.render('errores/error');
+            }
+            const usuarioId = userResult[0].usuarioId;
+            // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
+            conexion.query('UPDATE asignarEquipos SET equiposFolio = ?, personalId = ?, lugarId = ?, asignarEquiposFecha= ?, usuarioId = ?, asignarEquiposEstado = ? WHERE asignarEquiposId = ?',
+            [folio, personal, lugar, fecha, usuarioId, estado, id], (error, results) => {
+                if (error) {
+                    console.log('Error al actualizar al equipo:', error);
+                    res.render('errores/error');
+                } else {
+                    // Redirigir a la página de tipos de equipos después de la actualización
+                    res.redirect('/consultaAsignacion');
+                }
+            });
+        });
+    } catch{
     }
 };

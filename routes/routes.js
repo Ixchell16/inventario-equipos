@@ -56,13 +56,16 @@ router.get('/asignacion/lugar', autenticacionMiddleware, autorizacionMiddleware(
 router.get('/asignacion/lugar/:id', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerLugar);
 
 // Ruta para mostrar los tipos de Equipos
-router.get('/consultaAsigacion', autenticacionMiddleware, autorizacionMiddleware(1),mostrarControllerJ.mostrarAsignacion, (req, res) => {
+router.get('/consultaAsignacion', autenticacionMiddleware, autorizacionMiddleware(1),mostrarControllerJ.mostrarAsignacion, (req, res) => {
     res.render('jefe/consultaAsignacion', {
         login: true,
         name: req.user.name,
         rol: req.user.rol
     });
-});
+}); 
+router.get('/deleteAsignacion/:id', deleteControllerJ.deleteAsignacion);
+
+router.post('/updateAsignacion/:id', editControllerJ.updateAsignacion);
 
 // Ruta para mostrar los tipos de Equipos
 router.get('/consultaAsigacionS', autenticacionMiddleware, autorizacionMiddleware(2),mostrarControllerS.mostrarAsignacion, (req, res) => {

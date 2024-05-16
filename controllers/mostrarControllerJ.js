@@ -50,7 +50,7 @@ exports.mostrarPersonal = async (req, res) => {
 };
 
 exports.mostrarEquipos = async (req, res) => {
-    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId', (error, results) => {
+    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre, es.estadoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId ', (error, results) => {
         if(error){
             console.log('Error al consultar la base de datos:', error);
             res.render('errores/error');
@@ -61,7 +61,7 @@ exports.mostrarEquipos = async (req, res) => {
 };
 
 exports.mostrarBajas = async (req, res) => {
-    conexion.query('SELECT * FROM asignarequipos',(error, results)=>{
+    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId',(error, results)=>{
         if(error){
             console.error('Error al consultar la base de datos:', error);
             res.render('errores/error', { message: 'Error al consultar la base de datos' });
@@ -74,11 +74,11 @@ exports.mostrarBajas = async (req, res) => {
 
 exports.mostrarAsignacion = async (req, res) => {
     user = req.session.name
-    conexion.query('SELECT ae.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, u.usuarioNombre AS usuarioNombre, l.lugarSiglas, l.lugarEdificios, ae.asignarEquiposFecha, ae.asignarEquiposEstado FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId WHERE u.usuarioNombre = ? AND ae.asignarEquiposEstado = "Alta"', [user],(error, results)=>{
+    conexion.query('SELECT ae.asignarEquiposId, ae.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, p.personalId AS personalId, u.usuarioNombre AS usuarioNombre, l.lugarSiglas, l.lugarEdificios, l.lugarId AS lugarId, ae.asignarEquiposFecha, ae.asignarEquiposEstado FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId WHERE u.usuarioNombre = ? AND ae.asignarEquiposEstado = "Alta"', [user],(error, results)=>{
         if(error){
-            console.error('Error al consultar la base de datos:', error);
+            console.log('Error al consultar la base de datos:', error);
             res.render('errores/error');
-        } else {                       
+        } else {                      
             res.render('jefe/consultaAsignacion', { results: results, name: req.session.name });
         }   
     })

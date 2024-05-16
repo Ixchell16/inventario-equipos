@@ -26,7 +26,8 @@
                             <th>Edificio</th>
                             <th>Fecha</th>
                             <th>Estado</th>
-                            <!--<th>Editar</th>-->
+                            <th>Editar</th>
+                            <th>Eliminar</th>
                         </tr>
                     </thead>
                         <% if (Array.isArray(results) && results.length > 0) { %>
@@ -38,37 +39,101 @@
                                         <td><%= Asignacion.tipoEquipoNombre %></td>
                                         <td><%= Asignacion.equiposmodelo %></td>
                                         <td><%= Asignacion.marcaNombre %></td>
-                                        <td><%= Asignacion.equiposRam %></td>
+                                        <td><%= Asignacion.equiposRAM %></td>
                                         <td><%= Asignacion.equiposVelocidad %></td>
                                         <td><%= Asignacion.equiposDiscoDuro %></td>
                                         <td><%= Asignacion.personalNombre %></td>
                                         <td><%= Asignacion.usuarioNombre %></td>
                                         <td><%= Asignacion.lugarSiglas %></td>
                                         <td><%= Asignacion.lugarEdificios %></td>
-                                        <td><%= Asignacion.asignarEquiposFecha %></td>
+                                        <!-- Formatear la fecha al formato "yyyy-MM-dd" -->
+                                        <% const fecha = new Date(Asignacion.asignarEquiposFecha); %>
+                                        <td><%= fecha.toISOString().split('T')[0] %></td>
                                         <td><%= Asignacion.asignarEquiposEstado %></td>
                                         <td>
-                                        <!--<button type="button" 
-                                            data-id="<%= Asignacion.asignarEquiposId %>" 
-                                            class="editar-btn btn btn-warning">
-                                            <i class="bi bi-pencil-square"></i>
-                                            <span class="d-none d-sm-inline">Editar</span>
-                                        </button>-->
+                                            <button type="button" 
+                                                data-id="<%= Asignacion.asignarEquiposId %>"
+                                                data-user="<%= Asignacion.usuarioId %>"
+                                                data-folio="<%= Asignacion.equiposFolio %>"
+                                                data-serie="<%= Asignacion.equiposSerie %>"
+                                                data-marca="<%= Asignacion.marcaNombre %>"
+                                                data-tipo="<%= Asignacion.tipoEquipoNombre %>"
+                                                data-modelo="<%= Asignacion.equiposmodelo %>"
+                                                data-ram="<%= Asignacion.equiposRAM %>"
+                                                data-velo="<%= Asignacion.equiposVelocidad %>"
+                                                data-disco="<%= Asignacion.equiposDiscoDuro %>"
+
+                                                data-personal="<%= Asignacion.personalId%>"
+
+                                                data-lugar="<%= Asignacion.lugarId %>"
+                                                data-edificio="<%= Asignacion.lugarEdificios %>"
+
+                                                data-fecha="<%= Asignacion.asignarEquiposFecha %>"
+                                                data-estado="<%= Asignacion.asignarEquiposEstado %>"
+                                                class="update-btn btn btn-warning">
+                                                <i class="bi bi-pencil-square"></i>
+                                                <span class="d-none d-sm-inline">Editar</span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a href="#" 
+                                                data-id="<%= Asignacion.asignarEquiposId %>" 
+                                                class="eliminar-btn btn btn-danger">
+                                                <i class="bi bi-trash3-fill"></i>  
+                                                <span class="d-none d-sm-inline">Eliminar</span>
+                                            </a>
                                         </td>
                                     </tr>
                                 <% }) %>
-                            </tbody>
-                            
+                            </tbody>  
                         <% } else { %>
                             <tbody>
                                 <tr>
                                     <td colspan="17">No hay resultados disponibles</td>
                                 </tr>
                             </tbody>
-                        <% } %>                        
+                        <% } %>                         
                 </table>
             </div>
         </div>                 
+    </div>
+    <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Equipos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="modal-form" action="/updateAsignacion/:id" method="POST">
+                    <input type="hidden" class="form-control mb-3" name="id" id="id">
+                    <input type="hidden" class="form-control mb-3" name="user" id="user">
+
+                    <input type="text" class="form-control mb-3" name="folio" id="folio" readonly>
+                    <input type="text" class="form-control mb-3" name="serie" id="serie" placeholder="Serie" readonly>
+                    <input type="text" class="form-control mb-3" name="marca" id="marca" placeholder="Marca" readonly>
+                    <input type="text" class="form-control mb-3" name="tipo" id="tipo" placeholder="Tipo Equipo" readonly>
+                    <input type="text" class="form-control mb-3" name="modelo" id="modelo" placeholder="Modelo" readonly>
+                    <input type="text" class="form-control mb-3" name="ram" id="ram" placeholder="RAM" readonly>
+                    <input type="text" class="form-control mb-3" name="velocidad" id="velocidad" placeholder="Velocidad" readonly>
+                    <input type="text" class="form-control mb-3" name="disco" id="disco" placeholder="Disco Duro" readonly>
+
+                    <select name="personal" id="personal" class="form-control mb-3" required>
+                        <option selected>Seleccione al personal encargado del equipo</option>
+                    </select>
+
+                    <select name="lugar" id="lugar" class="form-control mb-3" required>
+                        <option selected>Seleccione el lugar donde estara el equipo</option>
+                    </select>
+                    <input type="text" class="form-control mb-3" name="edificio" id="edificio" placeholder="Edificio" readonly>
+
+                    <input type="date" class="form-control mb-3" name="fecha" id="fecha" readonly>
+                    <input type="text" class="form-control mb-3" name="estado" value="Alta" readonly>
+                    <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                </form>
+            </div>
+          </div>
+        </div>
     </div>
 </div>
 <!-- Content End -->
@@ -93,7 +158,216 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+<script>
+    window.onload = () => {
+        fetch('/asignacion/folio')
+            .then(response => response.json())
+            .then(data => {
+                const selectEquipos = document.getElementById('folio');
+                data.forEach(equipos => {
+                    const option = document.createElement('option');
+                    option.value = equipos.equiposFolio;
+                    option.textContent = equipos.equiposFolio;
+                    selectEquipos.appendChild(option);
+                });
+            })
+        .catch(error => console.error('Error al obtener el folio: ', error));
 
+
+        fetch('/asignacion/personal')
+            .then(response => response.json())
+            .then(data => {
+                const selectPersonal = document.getElementById('personal');
+                data.forEach(personal => {
+                    const option = document.createElement('option');
+                    option.value = personal.personalId;
+                    option.textContent = personal.personalNombre;
+                    selectPersonal.appendChild(option);
+                });
+            })
+        .catch(error => console.error('Error al obtener al personal: ', error));
+
+
+        fetch('/asignacion/lugar')
+            .then(response => response.json())
+            .then(data => {
+                const selectLugar = document.getElementById('lugar');
+                data.forEach(lugar => {
+                    const option = document.createElement('option');
+                    option.value = lugar.lugarId;
+                    option.textContent = lugar.lugarSiglas;
+                    selectLugar.appendChild(option);
+                });
+                // Agregar evento de cambio al select
+                selectLugar.addEventListener('change', function() {
+                    // Obtener el valor seleccionado del select
+                    const selectedId = this.value;
+
+                    // Realizar la solicitud AJAX para obtener los datos del lugar
+                    fetch(`/asignacion/lugar/${selectedId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector('input[name="edificio"]').value = data.lugarEdificios;
+                        })
+                    .catch(error => console.error('Error al obtener los datos del lugar: ', error));
+                });
+            })
+        .catch(error => console.error('Error al obtener el lugar: ', error));
+    };
+</script>
+
+
+<% if (typeof alert != "undefined")  { %>
+    <script>
+        Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= timer %>
+        }).then(()=>{
+            window.location='/<%= ruta %>'
+        })
+
+    </script>
+<% } %>
+
+<script>
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        })
+
+        $(document).on('click', '.update-btn', function(){
+            const $this = $(this);
+            // Obtener la fecha en formato legible
+            const fecha = new Date($this.attr('data-fecha'));
+
+            // Formatear la fecha en "yyyy-MM-dd"
+            const fechaFormateada = fecha.toISOString().split('T')[0];
+            const id = $this.attr('data-id');
+            const user = $this.attr('data-user');
+
+            const folio = $this.attr('data-folio');
+            const serie = $this.attr('data-serie');
+            const tipo = $this.attr('data-tipo');
+            const modelo = $this.attr('data-modelo');
+            const marca = $this.attr('data-marca');
+            const ram = $this.attr('data-ram');
+            const velo = $this.attr('data-velo');
+            const disco = $this.attr('data-disco');
+
+            const personal = $this.attr('data-personal');
+
+            const lugar = $this.attr('data-lugar');
+            const edificio = $this.attr('data-edificio');
+
+            const estado = $this.attr('data-estado');
+
+            console.log(id,user,folio,serie,tipo,modelo,marca,ram,velo,disco,personal,lugar,edificio,estado)
+            // Asigna los valores a los campos del formulario en el modal
+            $('#id').val(id);
+            $('#user').val(user);
+
+            $('#folio').val(folio);
+            $('#serie').val(serie);
+            $('#tipo').val(tipo);
+            $('#modelo').val(modelo);
+            $('#marca').val(marca);
+            $('#ram').val(ram);
+            $('#velocidad').val(velo);
+            $('#disco').val(disco);
+            
+            $('#personal').val(personal);
+
+            $('#lugar').val(lugar);
+            $('#edificio').val(edificio);
+
+            $('#fecha').val(fechaFormateada);
+            $('#estado').val(estado);
+            
+            // Muestra el modal
+            $('#myModal').modal('show');
+        });
+
+        // Captura el envío del formulario y envía los datos al servidor
+        $('#modal-form').on('submit', function(event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            
+            $.ajax({
+                url: '/updateAsignacion/:id',
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Si la actualización es exitosa, recarga la página para mostrar los cambios
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error al actualizar la asignación:', error);
+                    // Muestra un mensaje de error al usuario
+                    //alert('Ocurrió un error al actualizar el Equipo');
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Eliminar -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<% results.forEach((Asignacion) => { %>
+    <script>
+        document.querySelectorAll('.eliminar-btn').forEach(btn => {
+            btn.addEventListener('click', function(event) {
+                event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+                const id = this.getAttribute('data-id');
+    
+                // Mostrar la alerta SweetAlert para confirmar la eliminación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Esta acción eliminará el registro permanentemente.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
+                        fetch(`/deleteAsignacion/${id}`, {
+                            method: 'GET'
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error al eliminar la asignacion');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Si la eliminación es exitosa, recargar la página para mostrar los cambios
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error('Error al eliminar la asignacion:', error);
+                            console.log(error);
+                            // Mostrar un mensaje de error al usuario
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Ocurrió un error al eliminar la asignacion',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    
+<% }) %>
+
+
+<%- include ('../Sesion.ejs') %>
 </body>
-
 </html>
