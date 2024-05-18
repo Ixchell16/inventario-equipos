@@ -109,6 +109,7 @@ router.get('/asignacionS/lugar', autenticacionMiddleware, autorizacionMiddleware
 router.get('/asignacionS/lugar/:id', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerLugar);
 
 
+
 router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBajas, (req, res) => {
     res.render('jefe/bajasEquipos', {
         login: true,
@@ -116,6 +117,8 @@ router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(
         rol: req.user.rol
     });
 });
+
+router.get('/bodegaJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBodega);
 
 // Ruta para mostrar los tipos de Equipos
 router.get('/tiposEquiposJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarTipo, (req, res) => {
@@ -239,7 +242,7 @@ router.post('/updatePersonal/:id', editControllerJ.updatePersonal);
 
 
 //Ruta para eliminar y editar personal
-router.get('/deleteEquipos/:id', deleteControllerJ.bajaEquipos);
+router.get('/bajaEquipos/:id', deleteControllerJ.bajaEquipos);
 
 router.post('/updateEquipos/:folio', editControllerJ.updateEquipos);
 

@@ -110,17 +110,24 @@ exports.updateAsignacion = async (req, res) => {
                 return res.render('errores/error');
             }
             const usuarioId = userResult[0].usuarioId;
-            // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
-            conexion.query('UPDATE asignarEquipos SET equiposFolio = ?, personalId = ?, lugarId = ?, asignarEquiposFecha= ?, usuarioId = ?, asignarEquiposEstado = ? WHERE asignarEquiposId = ?',
-            [folio, personal, lugar, fecha, usuarioId, estado, id], (error, results) => {
+            conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [estado], (error, estadoResult) => {
                 if (error) {
-                    console.log('Error al actualizar al equipo:', error);
-                    res.render('errores/error');
-                } else {
-                    // Redirigir a la página de tipos de equipos después de la actualización
-                    res.redirect('/consultaAsignacion');
+                    console.error('Error al obtener el ID de usuario:', error);
+                    return res.render('errores/error');
                 }
-            });
+                const estadoId = estadoResult[0].estadoId;
+                // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
+                conexion.query('UPDATE asignarEquipos SET equiposFolio = ?, personalId = ?, lugarId = ?, asignarEquiposFecha= ?, usuarioId = ?, estadoId = ? WHERE asignarEquiposId = ?',
+                [folio, personal, lugar, fecha, usuarioId, estadoId, id], (error, results) => {
+                    if (error) {
+                        console.log('Error al actualizar al equipo:', error);
+                        res.render('errores/error');
+                    } else {
+                        // Redirigir a la página de tipos de equipos después de la actualización
+                        res.redirect('/consultaAsignacion');
+                    }
+                });
+                })
         });
     } catch{
     }

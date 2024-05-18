@@ -260,36 +260,33 @@ exports.registrarEquipos = async (req, res) => {
     const nuevaRAM = req.body.ram;
     const nuevaVelocidad = req.body.velocidad;
     const nuevoDisco = req.body.disco;
-
-    // Verificar si el equipo ya existe
-    conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? AND equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
-        if (error) {
-            console.log('Error al verificar si existe:', error);
-            return res.status(500).json({ message: 'Hubo un error al verificar si el equipo existe.' });
-        }
-        // Si el equipo ya existe, mostrar un mensaje de error
-        if (results.length > 0) {
-            return res.status(200).json({
-                success: false,
-                message: "Este equipo ya existe"
-            });
-        }
-
-        // Si el equipo no existe, insertarlo en la base de datos
-        conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposmodelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, equiposEstado) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', 
-            [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, 'ALTA'], 
-            (error, insertResult) => {
-                if (error) {
-                    console.error('Error al insertar el equipo:', error);
-                    return res.status(500).json({ message: 'Hubo un error al insertar el equipo.' });
+    try{
+        // Verificar si el equipo ya existe
+        conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? AND equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+            if (error) {
+                console.log('Error al verificar si existe:', error);
+                res.status(500).send({ message: 'Hubo un error al actualizar el usuario.' });
+                reject(error);
+            } else {
+                if(results.length >0){
+                    res.status(404).send({ message: 'El equipo ya existe' });
+                } else {
+                    conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposmodelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, 1], (error, insertResult) => {
+                        if (error) {
+                            console.log('Error al insertar el equipo:', error);
+                            res.render('errores/error');
+                        } else {
+                            // Redirigir a la página de consulta de usuarios después de la actualización
+                            res.status(200).send({ message: 'El usuario se actualizó correctamente.' });
+                        }
+                    });
                 }
-                // Si la inserción es exitosa, devuelve un mensaje de éxito como JSON
-                return res.status(200).json({
-                    success: true,
-                    message: "Se insertó correctamente el equipo"
-                });
-            });
-    });
+            }
+        });
+    }catch (error){
+        res.status(500).send({ message: 'Hubo un error al registrar el equipo' });
+        console.log('Error al registrar el equipo:', error);
+    }
 };
 
 
@@ -308,7 +305,6 @@ exports.registrarAsignacion = async (req, res) => {
                 console.error('Error al verificar si la asignación existe:', error);
                 return res.render('errores/error');
             }
-
             // Si el equipo ya existe, mostrar un mensaje de error
             if (results.length > 0) {
                 return res.render('jefe/asignacionEquipos', {  
@@ -330,11 +326,15 @@ exports.registrarAsignacion = async (req, res) => {
                     return res.render('errores/error');
                 }
                 const usuarioId = userResult[0].usuarioId;
-
-            
-                // Si el equipo no ha sido asignado, insertarlo en la base de datos
-                conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, usuarioId) VALUES (?, ?, ?, ?, ?, ?)', 
-                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, usuarioId], 
+                conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults)=> {
+                    if (error) {
+                        console.error('Error al obtener el ID del estado:', error);
+                        return res.render('errores/error');
+                    }
+                    const estadoId = estadoResults[0].estadoId;
+                    // Si el equipo no ha sido asignado, insertarlo en la base de datos
+                    conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, usuarioId, estadoId) VALUES (?, ?, ?, ?, ?, ?)', 
+                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, usuarioId, estadoId], 
                     (error, insertResult) => {
                         if (error) {
                             console.error('Error al asignar el equipo:', error);
@@ -355,6 +355,7 @@ exports.registrarAsignacion = async (req, res) => {
                     });
                 });
             })
+        })
         } catch (error) {
             console.error('Error en el controlador:', error);
             res.render('errores/error');

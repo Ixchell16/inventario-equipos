@@ -192,7 +192,7 @@
                     selectTipo.appendChild(option);
                 });
             })
-        .catch(error => console.error('Error al obtener los tipos: ', error));
+        .catch(error => console.error('Error al obtener los tipos: ', error))
 
         fetch('/equiposJ/marcasM')
             .then(response => response.json())
@@ -234,25 +234,14 @@
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Si la inserción es exitosa, mostrar mensaje de éxito en el modal
-                    $('#modalMensaje').text('Se insertó correctamente el equipo');
-                    $('#modalMensaje').addClass('text-success');
-                    // Cierra el modal después de un breve retraso
-                    setTimeout(function() {
-                        $('#exampleModal').modal('hide');
-                        // Recarga la página para mostrar los cambios si es necesario
-                        window.location.reload();
-                    }, 1500);
+                    // Si la actualización es exitosa, recarga la página para mostrar los cambios
+                    alert(response.message);
+                    window.location.href = '/equiposJ';
                 },
                 error: function(xhr, status, error) {
-                    console.log('Error al insertar el lugar:', error);
-                    // Muestra un mensaje de error al usuario en el modal
-                    $('#modalMensaje').text('Ocurrió un error al insertar el lugar');
-                    $('#modalMensaje').addClass('text-danger');
-                    // Cierra el modal después de un breve retraso
-                    setTimeout(function() {
-                        $('#exampleModal').modal('hide');
-                    }, 1500);
+                    console.log('Error al insertar el equipo:', error);           
+                    // Muestra un mensaje de error al usuario
+                    alert('Hubo un error al ingresar al equipo. Por favor, inténtalo de nuevo más tarde.');
                 }
             });
         });
@@ -301,12 +290,13 @@
                 data: formData,
                 success: function(response) {
                     // Si la actualización es exitosa, recarga la página para mostrar los cambios
-                    window.location.reload();
+                    alert(response.message);
+                    window.location.href = '/equiposJ';
                 },
                 error: function(xhr, status, error) {
                     console.log('Error al actualizar el Equipo:', error);
                     // Muestra un mensaje de error al usuario
-                    //alert('Ocurrió un error al actualizar el Equipo');
+                    alert('Hubo un error al ingresar el equipo. Por favor, inténtalo de nuevo más tarde.');
                 }
             });
         });
@@ -344,12 +334,12 @@
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
                         cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Sí, eliminar',
+                        confirmButtonText: 'Sí, dar de baja',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
-                            fetch(`/deleteEquipos/${id}`, {
+                            fetch(`/bajaEquipos/${id}`, {
                                 method: 'GET'
                             })
                             .then(response => {
@@ -368,7 +358,7 @@
                                 // Mostrar un mensaje de error al usuario
                                 Swal.fire({
                                     title: 'Error',
-                                    text: 'Ocurrió un error al eliminar al personal',
+                                    text: 'Ocurrió un error al eliminar al equipo',
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
