@@ -29,10 +29,21 @@ app.engine('ejs', ejs.renderFile);
 // Rutas
 app.use('/', routes);
 
+// Control de caché para usuarios no autenticados
 app.use(function(req, res, next) {
     if (!req.user)
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     next();
+});
+
+// Servir manifest.json (si no está ya en la carpeta 'public')
+app.get('/manifest.json', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
+});
+
+// Servir service-worker.js (si no está ya en la carpeta 'public')
+app.get('/service-worker.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'service-worker.js'));
 });
 
 const PORT = config.PORT
