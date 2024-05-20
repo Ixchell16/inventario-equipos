@@ -65,14 +65,33 @@ exports.mostrarEquipos = async (req, res) => {
 
 
 exports.mostrarBajas = async (req, res) => {
-    conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId WHERE e.estadoId = 2',(error, results)=>{
-        if(error){
-            console.error('Error al consultar la base de datos:', error);
-            res.render('errores/error', { message: 'Error al consultar la base de datos' });
-        } else {                       
-            res.render('jefe/bajasEquipos', { results: results, name: req.session.name });
-        }   
-    })
+    const user = req.session.name;
+    try{
+        conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [user], (error, userResults) => {
+            if (error) {
+                console.log('Error al obtener el usuario:', error);
+                return res.status(500).send({ message: 'Hubo un error al obtener el usuario.' });
+            }
+            
+            if (userResults.length === 0) {
+                return res.status(400).send({ message: 'Usuario no encontrado' });
+            }
+            
+            const usuarioId = userResults[0].usuarioId;
+    
+            conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre, u.usuarioNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId INNER JOIN usuarios u ON e.usuarioId = u.usuarioId WHERE e.estadoId = 2 AND e.usuarioId = ?',[usuarioId],(error, results)=>{
+                if(error){
+                    console.error('Error al consultar la base de datos:', error);
+                    res.render('errores/error', { message: 'Error al consultar la base de datos' });
+                } else {                       
+                    res.render('jefe/bajasEquipos', { results: results, name: req.session.name });
+                }   
+            })
+        })
+    }catch(error){
+        console.log('Error al mostrar el equipo:', error);
+        res.status(500).render('errores/error');
+    }
 };
 
 

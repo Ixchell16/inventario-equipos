@@ -81,22 +81,41 @@ exports.updatePersonal = async (req, res) => {
 };
 
 exports.updateEquipos = async (req, res) => {
-    const {folio, serie, marcaM, tipoM, modelo, ram, velocidad, disco } = req.body;
+    const { folio, serie, marcaM, tipoM, modelo, ram, velocidad, disco, estado } = req.body;
+    const userName = req.session.name;
+
     try {
-        // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
-        conexion.query('UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ?, estadoId = ? WHERE equiposFolio = ?',
-        [serie, marcaM, tipoM, modelo, ram, velocidad, disco,'1' ,folio], (error, results) => {
+        // Obtener el usuarioId a partir del nombre de usuario de la sesión
+        conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [userName], (error, userResults) => {
             if (error) {
-                console.log('Error al actualizar al equipo:', error);
-                res.render('errores/error');
-            } else {
-                // Redirigir a la página de tipos de equipos después de la actualización
-                res.redirect('/equiposJ');
+                console.log('Error al obtener el usuario:', error);
+                return res.status(500).send({ message: 'Hubo un error al obtener el usuario.' });
             }
+            
+            if (userResults.length === 0) {
+                return res.status(400).send({ message: 'Usuario no encontrado' });
+            }
+            
+            const usuarioId = userResults[0].usuarioId;
+
+            // Ejecutar consulta SQL para actualizar el equipo en la base de datos
+            conexion.query(
+                'UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ?, estadoId = ?, usuarioId = ? WHERE equiposFolio = ?',
+                [serie, marcaM, tipoM, modelo, ram, velocidad, disco, estado, usuarioId, folio],
+                (error, results) => {
+                    if (error) {
+                        console.log('Error al actualizar el equipo:', error);
+                        return res.status(500).send({ message: 'Hubo un error al actualizar el equipo.' });
+                    } else {
+                        // Redirigir a la página de equipos después de la actualización
+                        res.redirect('/equiposJ');
+                    }
+                }
+            );
         });
     } catch (error) {
-        console.log('Error al actualizar al equipo:', error);
-        res.render('errores/error');
+        console.log('Error al actualizar el equipo:', error);
+        res.status(500).render('errores/error');
     }
 };
 

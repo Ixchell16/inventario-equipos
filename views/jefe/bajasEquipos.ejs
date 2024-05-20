@@ -35,23 +35,24 @@
                         <td><%= equipos.marcaNombre %></td>
                         <td><%= equipos.tipoEquipoNombre %></td>
                         <td><%= equipos.equiposmodelo %></td>
-                        <td><%= equipos.equiposRam %></td>
+                        <td><%= equipos.equiposRAM %></td>
                         <td><%= equipos.equiposVelocidad %></td>
                         <td><%= equipos.equiposDiscoDuro %></td>
                         <td><%= equipos.estadoNombre %></td>
                         <td>
-                            <button type="button" data-toggle="modal" data-target="#myModal" 
-                                data-folio="<%= equipos.equiposFolio %>" 
-                                data-serie="<%= equipos.equiposSerie %>"
-                                data-marca="<%= equipos.marcaId %>" 
-                                data-tipo="<%= equipos.tipoEquipoId %>" 
-                                data-modelo="<%= equipos.equiposmodelo %>"
-                                data-ram="<%= equipos.equiposRam %>"
-                                data-velo="<%= equipos.equiposVelocidad %>"
-                                data-disco="<%= equipos.equiposDiscoDuro %>"
-                                class="update-btn btn btn-warning">
-                                <i class="bi bi-pencil-square"></i>  
-                                <span class="d-none d-sm-inline">Editar</span>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" 
+                                    data-folio="<%= equipos.equiposFolio %>" 
+                                    data-serie="<%= equipos.equiposSerie %>"
+                                    data-marca="<%= equipos.marcaId %>" 
+                                    data-tipo="<%= equipos.tipoEquipoId %>" 
+                                    data-modelo="<%= equipos.equiposmodelo %>"
+                                    data-ram="<%= equipos.equiposRAM %>"
+                                    data-velocidad="<%= equipos.equiposVelocidad %>"
+                                    data-disco="<%= equipos.equiposDiscoDuro %>"
+                                    data-estado="<%= equipos.estadoId %>"
+                                    class="update-btn btn btn-warning">
+                                    <i class="bi bi-pencil-square"></i>  
+                                    <span class="d-none d-sm-inline">Editar</span>
                             </button>
                         </td>
                         <td>
@@ -77,42 +78,32 @@
     </div>
     <div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Editar Equipos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Equipos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modal-form" action="/updateEquipos" method="POST">
+                        <input type="text" class="form-control" name="folio" id="folio" placeholder="Ingrese el folio telmex del equipo" maxlength="8" readonly><br>
+                        <input type="text" class="form-control" name="serie" id="serie" placeholder="Ingrese el numero de serie del equipo" maxlength="16" required><br>
+                        <select name="marcaM" id="marcaM" class="form-control" required>
+                            <option selected>Seleccione la marca del equipo</option>
+                        </select><br>
+                        <select name="tipoM" id="tipoM" class="form-control" required>
+                            <option selected>Seleccione el tipo de equipo</option>
+                        </select><br>
+                        <input type="text" class="form-control" name="modelo" id="modelo" placeholder="Ingrese el modelo del equipo" required><br>
+                        <input type="text" class="form-control" name="ram" id="ram" placeholder="Ingrese la RAM del equipo" required><br>
+                        <input type="text" class="form-control" name="velocidad" id="velocidad" placeholder="Ingrese la Velocidad del equipo" required><br>
+                        <input type="text" class="form-control" name="disco" id="disco" placeholder="Ingrese la Disco Duro del equipo" required><br>
+                        <input type="hidden" class="form-control mb-3" name="estado" id="estado" readonly>   
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
+                    </form>
+                </div>
             </div>
-            <div class="modal-body">
-                <form id="modal-form" action="/updateAsignacion/:id" method="POST">
-                    <input type="hidden" class="form-control mb-3" name="id">
-
-                    <input type="text" class="form-control mb-3" name="folio" id="folio" readonly>
-                    <input type="text" class="form-control mb-3" name="serie" id="serie" placeholder="Serie" readonly>
-                    <input type="text" class="form-control mb-3" name="marca" id="marca" placeholder="Marca" readonly>
-                    <input type="text" class="form-control mb-3" name="tipo" id="tipo" placeholder="Tipo Equipo" readonly>
-                    <input type="text" class="form-control mb-3" name="modelo" id="modelo" placeholder="Modelo" readonly>
-                    <input type="text" class="form-control mb-3" name="ram" id="ram" placeholder="RAM" readonly>
-                    <input type="text" class="form-control mb-3" name="velocidad" id="velocidad" placeholder="Velocidad" readonly>
-                    <input type="text" class="form-control mb-3" name="disco" id="disco" placeholder="Disco Duro" readonly>
-
-                    <select name="personal" id="personal" class="form-control mb-3" required>
-                        <option selected>Seleccione al personal encargado del equipo</option>
-                    </select>
-
-                    <select name="lugar" id="lugar" class="form-control mb-3" required>
-                        <option selected>Seleccione el lugar donde estara el equipo</option>
-                    </select>
-                    <input type="text" class="form-control mb-3" name="edificio" id="edificio" placeholder="Edificio" readonly>
-
-                    <input type="date" class="form-control mb-3" name="fecha" id="fecha" readonly>
-                    <input type="text" class="form-control mb-3" name="estado" value="Alta" readonly>
-                    <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
-                </form>
-            </div>
-          </div>
         </div>
     </div>
-</div>
 <!-- Content End -->
 
 <!-- Back to Top -->
@@ -137,62 +128,33 @@
 
 <script>
     window.onload = () => {
-        fetch('/asignacion/folio')
+        fetch('/equiposJ/marcasM')
             .then(response => response.json())
             .then(data => {
-                const selectEquipos = document.getElementById('folio');
-                data.forEach(equipos => {
+                const selectMarca = document.getElementById('marcaM');
+                data.forEach(marca => {
                     const option = document.createElement('option');
-                    option.value = equipos.equiposFolio;
-                    option.textContent = equipos.equiposFolio;
-                    selectEquipos.appendChild(option);
+                    option.value = marca.marcaId;
+                    option.textContent = marca.marcaNombre;
+                    selectMarca.appendChild(option);
                 });
             })
-        .catch(error => console.error('Error al obtener el folio: ', error));
+        .catch(error => console.error('Error al obtener marcas: ', error));
 
-
-        fetch('/asignacion/personal')
+        fetch('/equiposJ/tipoM')
             .then(response => response.json())
             .then(data => {
-                const selectPersonal = document.getElementById('personal');
-                data.forEach(personal => {
+                const selectTipo = document.getElementById('tipoM');
+                data.forEach(tipoEquipo => {
                     const option = document.createElement('option');
-                    option.value = personal.personalId;
-                    option.textContent = personal.personalNombre;
-                    selectPersonal.appendChild(option);
+                    option.value = tipoEquipo.tipoEquipoId;
+                    option.textContent = tipoEquipo.tipoEquipoNombre;
+                    selectTipo.appendChild(option);
                 });
             })
-        .catch(error => console.error('Error al obtener al personal: ', error));
-
-
-        fetch('/asignacion/lugar')
-            .then(response => response.json())
-            .then(data => {
-                const selectLugar = document.getElementById('lugar');
-                data.forEach(lugar => {
-                    const option = document.createElement('option');
-                    option.value = lugar.lugarId;
-                    option.textContent = lugar.lugarSiglas;
-                    selectLugar.appendChild(option);
-                });
-                // Agregar evento de cambio al select
-                selectLugar.addEventListener('change', function() {
-                    // Obtener el valor seleccionado del select
-                    const selectedId = this.value;
-
-                    // Realizar la solicitud AJAX para obtener los datos del lugar
-                    fetch(`/asignacion/lugar/${selectedId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            document.querySelector('input[name="edificio"]').value = data.lugarEdificios;
-                        })
-                    .catch(error => console.error('Error al obtener los datos del lugar: ', error));
-                });
-            })
-        .catch(error => console.error('Error al obtener el lugar: ', error));
+        .catch(error => console.error('Error al obtener los tipos: ', error));
     };
 </script>
-
 
 <% if (typeof alert != "undefined")  { %>
     <script>
@@ -212,54 +174,32 @@
 <script>
     $(function(){
         $('[data-toggle="tooltip"]').tooltip({
-            Template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-        })
+            template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        });
 
         $(document).on('click', '.update-btn', function(){
             const $this = $(this);
-            // Obtener la fecha en formato legible
-            const fecha = new Date($this.attr('data-fecha'));
-
-            // Formatear la fecha en "yyyy-MM-dd"
-            const fechaFormateada = fecha.toISOString().split('T')[0];
-            const id = $this.attr('data-id');
-
             const folio = $this.attr('data-folio');
             const serie = $this.attr('data-serie');
-            const tipo = $this.attr('data-tipo');
+            const marcaM = $this.attr('data-marca');
+            const tipoM = $this.attr('data-tipo');
             const modelo = $this.attr('data-modelo');
-            const marca = $this.attr('data-marca');
             const ram = $this.attr('data-ram');
-            const velo = $this.attr('data-velo');
+            const velocidad = $this.attr('data-velocidad'); 
             const disco = $this.attr('data-disco');
-
-            const personal = $this.attr('data-personal');
-
-            const lugar = $this.attr('data-lugar');
-            const edificio = $this.attr('data-edificio');
-
             const estado = $this.attr('data-estado');
-
-            console.log(id,folio,serie,tipo,modelo,marca,ram,velo,disco,personal,lugar,edificio,estado)
+            
             // Asigna los valores a los campos del formulario en el modal
-            $('#id').val(id);
             $('#folio').val(folio);
             $('#serie').val(serie);
-            $('#tipo').val(tipo);
+            $('#marcaM').val(marcaM);
+            $('#tipoM').val(tipoM);
             $('#modelo').val(modelo);
-            $('#marca').val(marca);
             $('#ram').val(ram);
-            $('#velocidad').val(velo);
+            $('#velocidad').val(velocidad); 
             $('#disco').val(disco);
-            
-            $('#personal').val(personal);
-
-            $('#lugar').val(lugar);
-            $('#edificio').val(edificio);
-
-            $('#fecha').val(fechaFormateada);
             $('#estado').val(estado);
-            
+
             // Muestra el modal
             $('#myModal').modal('show');
         });
@@ -268,19 +208,30 @@
         $('#modal-form').on('submit', function(event) {
             event.preventDefault();
             const formData = $(this).serialize();
-            
+            const folio = $('#folio').val(); // Obtener el folio para la URL
+
             $.ajax({
-                url: '/updateAsignacion/:id',
+                url: `/updateEquipos/${folio}`, // Usar template literal para incluir el folio en la URL
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Si la actualización es exitosa, recarga la página para mostrar los cambios
-                    window.location.reload();
+                    // Si la actualización es exitosa, muestra un mensaje con SweetAlert y recarga la página
+                    Swal.fire({
+                        title: 'Actualización exitosa',
+                        text: response.message,
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/bajasAsiganacion';
+                    });
                 },
                 error: function(xhr, status, error) {
-                    console.log('Error al actualizar la asignación:', error);
-                    // Muestra un mensaje de error al usuario
-                    //alert('Ocurrió un error al actualizar el Equipo');
+                    console.log('Error al actualizar el equipo:', error);
+                    // Muestra un mensaje de error con SweetAlert
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un error al actualizar el equipo. Por favor, inténtalo de nuevo más tarde.',
+                        icon: 'error'
+                    });
                 }
             });
         });

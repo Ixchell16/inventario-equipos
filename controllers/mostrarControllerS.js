@@ -94,3 +94,15 @@ exports.mostrarAsignacion = async (req, res) => {
         }   
     })
 };
+
+
+exports.mostrarBajas = async (req, res) => {
+    conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId WHERE e.estadoId = 2',(error, results)=>{
+        if(error){
+            console.error('Error al consultar la base de datos:', error);
+            res.render('errores/error', { message: 'Error al consultar la base de datos' });
+        } else {                       
+            res.render('supervisor/bajasEquipos', { results: results, name: req.session.name });
+        }   
+    })
+};

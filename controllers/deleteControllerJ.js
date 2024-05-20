@@ -57,7 +57,8 @@ exports.deletePersonal = async (req, res) => {
 }
 
 exports.bajaEquipos = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
+    console.log(id) 
     try {
         // Verificar si el equipo ha sido asignado
         const equipoAsignado = await verificarAsignacion(id);
@@ -87,13 +88,13 @@ exports.bajaEquipos = async (req, res) => {
 // Función para verificar si un equipo ha sido asignado
 async function verificarAsignacion(idEquipo) {
     return new Promise((resolve, reject) => {
-        conexion.query('SELECT * FROM asignarEquipos WHERE estadoId = 3 AND asignarEuiqpoId', [idEquipo], (error, results) => {
+        conexion.query('SELECT * FROM asignarEquipos WHERE estadoId = 3 AND equiposFolio = ?', [idEquipo], (error, results) => {
             if (error) {
                 reject(error);
             } else {
                 // Si hay resultados, significa que el equipo está asignado
                 // Si no hay resultados, el equipo no está asignado
-                resolve(results.length > 0);
+                resolve(results.length = 0);
             }
         });
     });

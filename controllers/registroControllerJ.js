@@ -260,12 +260,13 @@ exports.registrarEquipos = async (req, res) => {
     const nuevaRAM = req.body.ram;
     const nuevaVelocidad = req.body.velocidad;
     const nuevoDisco = req.body.disco;
+    const nuevoEstado = req.body.estado
 
     const userName = req.session.name;
 
     try {
         // Obtener el usuarioId a partir del nombre de usuario de la sesión
-        conexion.query('SELECT usuarioId FROM usuarios WHERE nombreUsuario = ?', [userName], (error, userResults) => {
+        conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [userName], (error, userResults) => {
             if (error) {
                 console.log('Error al obtener el usuario:', error);
                 return res.status(500).send({ message: 'Hubo un error al obtener el usuario.' });
@@ -274,30 +275,38 @@ exports.registrarEquipos = async (req, res) => {
             if (userResults.length === 0) {
                 return res.status(400).send({ message: 'Usuario no encontrado' });
             }
-            
             const usuarioId = userResults[0].usuarioId;
-
-            // Verificar si el equipo ya existe
-            conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? OR equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+            conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults) => {
                 if (error) {
-                    console.log('Error al verificar si existe:', error);
-                    return res.status(500).send({ message: 'Hubo un error al verificar el equipo.' });
+                    console.log('Error al obtener el estado:', error);
+                    return res.status(500).send({ message: 'Hubo un error al obtener el estado.' });
                 }
-                
-                if (results.length > 0) {
-                    return res.status(400).send({ message: 'El equipo ya existe' });
-                } else {
-                    // Insertar el nuevo equipo
-                    conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposModelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId, usuarioId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, 1, usuarioId], (error, insertResult) => {
-                        if (error) {
-                            console.log('Error al insertar el equipo:', error);
-                            return res.status(500).send({ message: 'Hubo un error al insertar el equipo.' });
-                        } else {
-                            return res.status(200).send({ message: 'El equipo se registró correctamente.' });
-                        }
-                    });
+                if (userResults.length === 0) {
+                    return res.status(400).send({ message: 'Estado no encontrado' });
                 }
-            });
+                const estadoId = estadoResults[0].estadoId;
+                // Verificar si el equipo ya existe
+                conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? OR equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+                    if (error) {
+                        console.log('Error al verificar si existe:', error);
+                        return res.status(500).send({ message: 'Hubo un error al verificar el equipo.' });
+                    }
+                    
+                    if (results.length > 0) {
+                        return res.status(400).send({ message: 'El folio o el numero de serie ya existen, Por favor ingrese uno diferente' });
+                    } else {
+                        // Insertar el nuevo equipo
+                        conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposModelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId, usuarioId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, estadoId, usuarioId], (error, insertResult) => {
+                            if (error) {
+                                console.log('Error al insertar el equipo:', error);
+                                return res.status(500).send({ message: 'Hubo un error al insertar el equipo.' });
+                            } else {
+                                return res.status(200).send({ message: 'El equipo se registró correctamente.' });
+                            }
+                        });
+                    }
+                });
+            })
         });
     } catch (error) {
         console.log('Error al registrar el equipo:', error);
@@ -378,3 +387,24 @@ exports.registrarAsignacion = async (req, res) => {
             res.render('errores/error');
         }
     };
+
+    exports.altaEquipos = async (req, res) => {
+        const { id } = req.params;
+        console.log(id) 
+        try {        
+            // Si el equipo no ha sido asignado, eliminarlo de la base de datos
+            conexion.query('UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', ['1',id], (error, results) => {
+                if (error) {
+                    console.error('Error al dar de alta el equipo:', error);
+                    res.status(500).json({ error: 'Ocurrió un error al dar de alta equipo.' });
+                } else {
+                    res.json({ success: true });
+                }
+            });
+        } catch (error) {
+            // Manejar errores
+            console.error('Error al intentar de dar de alta el equipo:', error);
+            res.status(500).json({ error: 'Ocurrió un error al dar de lata el equipo.' });
+        }
+    };
+    

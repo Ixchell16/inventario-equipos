@@ -118,6 +118,16 @@ router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(
     });
 });
 
+router.get('/bajasAsiganacionS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarBajas, (req, res) => {
+    res.render('supervisor/bajasEquipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+router.get('/altaEquipos/:id', registroControllerJ.altaEquipos);
+
 router.get('/bodegaJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBodega);
 
 // Ruta para mostrar los tipos de Equipos
