@@ -48,11 +48,23 @@ exports.mostrarPersonal = async (req, res) => {
 };
 
 exports.mostrarEquipos = async (req, res) => {
-    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId', (error, results) => {
-        if(error){
+    const sql = `
+        SELECT e.*, m.marcaNombre, te.tipoEquipoNombre, es.estadoNombre, u.usuarioNombre 
+        FROM equipos e 
+        INNER JOIN marca m ON e.marcaId = m.marcaId 
+        INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId 
+        INNER JOIN estado es ON e.estadoId = es.estadoId 
+        INNER JOIN usuarios u ON e.usuarioId = u.usuarioId 
+        WHERE e.estadoId = 1`;
+
+    conexion.query(sql, (error, results) => {
+        if (error) {
             console.log('Error al consultar la base de datos:', error);
             res.render('errores/error');
-        } else {                       
+        } else {
+            // Log para depuración
+            console.log(results);
+
             res.render('supervisor/equipos', { results: results, name: req.session.name });
         }   
     });

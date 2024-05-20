@@ -69,15 +69,45 @@ exports.deletePersonal = async (req, res) => {
     }
 }
 
-exports.deleteEquipos = async (req, res) => {
-    const { id } = req.params; 
+exports.bajaEquipos = async (req, res) => {
+    const { id } = req.params;
     try {
-        // Eliminar el tipo de equipo de la base de datos
-        conexion.query('DELETE FROM equipos WHERE equiposFolio = ?', [id]);
-        res.json({ success: true });
+        // Verificar si el equipo ha sido asignado
+        const equipoAsignado = await verificarAsignacion(id);
+        if (equipoAsignado) {
+            // Si el equipo ha sido asignado, enviar un mensaje de error al cliente
+            res.status(400).json({ errsor: 'No se puede eliminar el equipo porque está asignado.' });
+            return;
+        }
+        
+        // Si el equipo no ha sido asignado, eliminarlo de la base de datos
+        conexion.query('UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', ['2',id], (error, results) => {
+            if (error) {
+                console.error('Error al eliminar el equipo:', error);
+                res.status(500).json({ error: 'Ocurrió un error al eliminar el equipo.' });
+            } else {
+                res.json({ success: true });
+            }
+        });
     } catch (error) {
         // Manejar errores
-        console.error('Error al eliminar el lugar:', error);
-        res.render('errores/error');
+        console.error('Error al eliminar el equipo:', error);
+        res.status(500).json({ error: 'Ocurrió un error al eliminar el equipo.' });
     }
+}
+
+
+// Función para verificar si un equipo ha sido asignado
+async function verificarAsignacion(idEquipo) {
+    return new Promise((resolve, reject) => {
+        conexion.query('SELECT * FROM asignarEquipos WHERE estadoId = 3 AND equiposFolio = ?', [idEquipo], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                // Si hay resultados, significa que el equipo está asignado
+                // Si no hay resultados, el equipo no está asignado
+                resolve(results.length = 0);
+            }
+        });
+    });
 }

@@ -28,6 +28,7 @@
                             <th>RAM</th>
                             <th>Velocidad</th>
                             <th>Disco Duro</th>
+                            <th>Capturo</th>
                             <th>Estado</th>
                             <th>Editar</th>
                             <th>Baja</th>
@@ -45,6 +46,7 @@
                             <td><%= equipos.equiposRAM %></td>
                             <td><%= equipos.equiposVelocidad %></td>
                             <td><%= equipos.equiposDiscoDuro %></td>
+                            <td><%= equipos.usuarioNombre %></td>
                             <td><%= equipos.estadoNombre %></td>
                             <td>
                                 <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" 
@@ -56,10 +58,12 @@
                                     data-ram="<%= equipos.equiposRAM %>"
                                     data-velocidad="<%= equipos.equiposVelocidad %>"
                                     data-disco="<%= equipos.equiposDiscoDuro %>"
+                                    data-usuario="<%= equipos.usuarioId %>"
+                                    data-estado="<%= equipos.estadoId %>"
                                     class="update-btn btn btn-warning">
                                     <i class="bi bi-pencil-square"></i>  
                                     <span class="d-none d-sm-inline">Editar</span>
-                                </button>
+                                </button> 
                             </td>
                             <td>
                                 <a href="#" 
@@ -75,7 +79,7 @@
                     <% } else { %>
                     <tbody>
                         <tr>
-                            <td colspan="10">No hay resultados disponibles</td>
+                            <td colspan="12">No hay resultados disponibles</td>
                         </tr>
                     </tbody>
                     <% } %>                         
@@ -105,6 +109,8 @@
                         <input type="text" class="form-control" name="ram" id="ram" placeholder="Ingrese la RAM del equipo" required><br>
                         <input type="text" class="form-control" name="velocidad" id="velocidad" placeholder="Ingrese la Velocidad del equipo" required><br>
                         <input type="text" class="form-control" name="disco" id="disco" placeholder="Ingrese la Disco Duro del equipo" required><br>
+                        <input type="hidden" class="form-control mb-3" name="estado" id="estado" readonly>   
+                        <input type="hidden" class="form-control mb-3" name="usuario" id="usuario" readonly>   
                         <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
                     </form>
                 </div>
@@ -134,7 +140,7 @@
                             <input type="text" class="form-control mb-3" name="ram" placeholder="Ingrese la RAM del equipo (Si no se conoce colocar N/A)" required>
                             <input type="text" class="form-control mb-3" name="velocidad" placeholder="Ingrese la Velocidad del equipo (Si no se conoce colocar N/A)" required>
                             <input type="text" class="form-control mb-3" name="disco" placeholder="Ingrese la Disco Duro del equipo (Si no se conoce colocar N/A)" required>
-                            <input type="hidden" class="form-control mb-3" name="estado" id="estado"  value="ALTA" readonly>   
+                            <input type="hidden" class="form-control mb-3" name="estado" id="estado" value="ALTA" readonly>   
                             
                             <input type="submit" class="btn btn-primary">
                         </form>
@@ -169,7 +175,7 @@
 
 <script>
     window.onload = () => {
-        fetch('/equiposJ/marcas')
+        fetch('/equiposS/marcas')
             .then(response => response.json())
             .then(data => {
                 const selectMarca = document.getElementById('marca');
@@ -182,7 +188,7 @@
             })
         .catch(error => console.error('Error al obtener marcas: ', error));
 
-        fetch('/equiposJ/tipo')
+        fetch('/equiposS/tipo')
             .then(response => response.json())
             .then(data => {
                 const selectTipo = document.getElementById('tipo');
@@ -195,7 +201,7 @@
             })
         .catch(error => console.error('Error al obtener los tipos: ', error))
 
-        fetch('/equiposJ/marcasM')
+        fetch('/equiposS/marcasM')
             .then(response => response.json())
             .then(data => {
                 const selectMarca = document.getElementById('marcaM');
@@ -208,7 +214,7 @@
             })
         .catch(error => console.error('Error al obtener marcas: ', error));
 
-        fetch('/equiposJ/tipoM')
+        fetch('/equiposS/tipoM')
             .then(response => response.json())
             .then(data => {
                 const selectTipo = document.getElementById('tipoM');
@@ -230,7 +236,7 @@
             const formData = $(this).serialize();
             
             $.ajax({
-                url: '/equiposJ',
+                url: '/equiposS',
                 method: 'POST',
                 data: formData,
                 success: function(response) {
@@ -239,7 +245,7 @@
                         text: response.message,
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/equiposJ';
+                        window.location.href = '/equiposS';
                     });
                 },
                 error: function(xhr, status, error) {
@@ -271,8 +277,10 @@
             const tipoM = $this.attr('data-tipo');
             const modelo = $this.attr('data-modelo');
             const ram = $this.attr('data-ram');
-            const velocidad = $this.attr('data-velocidad'); // corregido a "data-velocidad"
+            const velocidad = $this.attr('data-velocidad'); 
             const disco = $this.attr('data-disco');
+            const estado = $this.attr('data-estado');
+            const usuario =$this.attr('data-usuario');
             
             // Asigna los valores a los campos del formulario en el modal
             $('#folio').val(folio);
@@ -281,8 +289,10 @@
             $('#tipoM').val(tipoM);
             $('#modelo').val(modelo);
             $('#ram').val(ram);
-            $('#velocidad').val(velocidad); // corregido a "velocidad"
+            $('#velocidad').val(velocidad); 
             $('#disco').val(disco);
+            $('#estado').val(estado);
+            $('#usuario').val(usuario);
             
             // Muestra el modal
             $('#myModal').modal('show');
@@ -295,7 +305,7 @@
             const folio = $('#folio').val(); // Obtener el folio para la URL
 
             $.ajax({
-                url: `/updateEquipos/${folio}`, // Usar template literal para incluir el folio en la URL
+                url: `/updateEquiposS/${folio}`, // Usar template literal para incluir el folio en la URL
                 method: 'POST',
                 data: formData,
                 success: function(response) {
@@ -305,7 +315,7 @@
                         text: response.message,
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/equiposJ';
+                        window.location.href = '/equiposS';
                     });
                 },
                 error: function(xhr, status, error) {
@@ -360,7 +370,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Si el usuario confirma la eliminación, enviar una solicitud al servidor para eliminar el elemento
-                            fetch(`/bajaEquipos/${id}`, {
+                            fetch(`/bajaEquiposS/${id}`, {
                                 method: 'GET'
                             })
                             .then(response => {

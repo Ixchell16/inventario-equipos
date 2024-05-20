@@ -125,21 +125,25 @@ exports.updatePersonal = async (req, res) => {
 };
 
 exports.updateEquipos = async (req, res) => {
-    const {folio, serie, marcaM, tipoM, modelo, ram, velocidad, disco } = req.body;
+    const { folio, serie, marcaM, tipoM, modelo, ram, velocidad, disco, estado, usuario } = req.body;
+
     try {
-        // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
-        conexion.query('UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ? WHERE equiposFolio = ?',
-        [serie, marcaM, tipoM, modelo, ram, velocidad, disco, folio], (error, results) => {
-            if (error) {
-                console.log('Error al actualizar al equipo:', error);
-                res.render('errores/error');
-            } else {
-                // Redirigir a la página de tipos de equipos después de la actualización
-                res.redirect('/equiposJ');
-            }
-        });
+            // Ejecutar consulta SQL para actualizar el equipo en la base de datos
+            conexion.query(
+                'UPDATE equipos SET equiposSerie = ?, marcaId = ?, tipoEquipoId = ?, equiposmodelo = ?, equiposRAM = ?, equiposVelocidad = ?, equiposDiscoDuro = ?, estadoId = ?, usuarioId = ? WHERE equiposFolio = ?',
+                [serie, marcaM, tipoM, modelo, ram, velocidad, disco, estado, usuario, folio],
+                (error, results) => {
+                    if (error) {
+                        console.log('Error al actualizar el equipo:', error);
+                        return res.status(500).send({ message: 'Hubo un error al actualizar el equipo.' });
+                    } else {
+                        // Redirigir a la página de equipos después de la actualización
+                        res.redirect('/equiposJ');
+                    }
+                }
+            );
     } catch (error) {
-        console.log('Error al actualizar al equipo:', error);
-        res.render('errores/error');
+        console.log('Error al actualizar el equipo:', error);
+        res.status(500).render('errores/error');
     }
 };

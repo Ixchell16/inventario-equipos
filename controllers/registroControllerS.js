@@ -306,6 +306,7 @@ exports.registrarPersonal = async (req, res) => {
         res.render('errores/error');
     }
 };
+
 exports.registrarEquipos = async (req, res) => {
     const nuevoFolio = req.body.folio;
     const nuevaSerie = req.body.serie;
@@ -315,64 +316,57 @@ exports.registrarEquipos = async (req, res) => {
     const nuevaRAM = req.body.ram;
     const nuevaVelocidad = req.body.velocidad;
     const nuevoDisco = req.body.disco;
+    const nuevoEstado = req.body.estado
+
+    const userName = req.session.name;
 
     try {
-        // Verificar si el equipo ya existe
-        conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? AND equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+        // Obtener el usuarioId a partir del nombre de usuario de la sesión
+        conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [userName], (error, userResults) => {
             if (error) {
-                console.error('Error al verificar si el equipo existe:', error);
-                return res.render('errores/error');
+                console.log('Error al obtener el usuario:', error);
+                return res.status(500).send({ message: 'Hubo un error al obtener el usuario.' });
             }
-
-            // Si el equipo ya existe, mostrar un mensaje de error
-            if (results.length > 0) {
-                return res.render('supervisor/equipos', {  
-                    results: results,
-                    name: req.session.name,
-                    alert: true,
-                    alertTitle: "Error al Insertar",
-                    alertMessage: "Este equipo ya existe",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: false,
-                    ruta: 'equiposS'
-                });
+            
+            if (userResults.length === 0) {
+                return res.status(400).send({ message: 'Usuario no encontrado' });
             }
-
-            // Si el equipo no existe, insertarlo en la base de datos
-            conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposmodelo, equiposRAM, equiposVelocidad, equiposDiscoDuro) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-                [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco], 
-                (error, insertResult) => {
+            const usuarioId = userResults[0].usuarioId;
+            conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults) => {
+                if (error) {
+                    console.log('Error al obtener el estado:', error);
+                    return res.status(500).send({ message: 'Hubo un error al obtener el estado.' });
+                }
+                if (userResults.length === 0) {
+                    return res.status(400).send({ message: 'Estado no encontrado' });
+                }
+                const estadoId = estadoResults[0].estadoId;
+                // Verificar si el equipo ya existe
+                conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? OR equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
                     if (error) {
-                        console.error('Error al insertar el equipo:', error);
-                        return res.render('errores/error');
+                        console.log('Error al verificar si existe:', error);
+                        return res.status(500).send({ message: 'Hubo un error al verificar el equipo.' });
                     }
-
-                    // Después de la inserción exitosa, realizar una nueva consulta para obtener todos los equipos existentes
-                    conexion.query('SELECT * FROM equipos', (error, equipos) => {
-                        if (error) {
-                            console.error('Error al obtener los equipos:', error);
-                            return res.render('errores/error');
-                        }
-
-                        // Mostrar mensaje de éxito y todos los equipos obtenidos
-                        res.render('supervisor/equipos', { 
-                            results: equipos,
-                            name: req.session.name,
-                            alert: true,
-                            alertTitle: "Inserción Completada",
-                            alertMessage: "Se insertó correctamente el equipo",
-                            alertIcon: 'success',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            ruta: 'equiposS'
+                    
+                    if (results.length > 0) {
+                        return res.status(400).send({ message: 'El folio o el numero de serie ya existen, Por favor ingrese uno diferente' });
+                    } else {
+                        // Insertar el nuevo equipo
+                        conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposModelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId, usuarioId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, estadoId, usuarioId], (error, insertResult) => {
+                            if (error) {
+                                console.log('Error al insertar el equipo:', error);
+                                return res.status(500).send({ message: 'Hubo un error al insertar el equipo.' });
+                            } else {
+                                return res.status(200).send({ message: 'El equipo se registró correctamente.' });
+                            }
                         });
-                    });
+                    }
                 });
+            })
         });
     } catch (error) {
-        console.error('Error en el controlador:', error);
-        res.render('errores/error');
+        console.log('Error al registrar el equipo:', error);
+        return res.status(500).send({ message: 'Hubo un error al registrar el equipo.' });
     }
 };
 

@@ -316,6 +316,15 @@ router.get('/equiposS', autenticacionMiddleware, autorizacionMiddleware(2), most
     });
 });
 
+router.post('/equiposS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarEquipos, (req, res) => {
+    res.render('supervisor/equipos', {
+        login: true,
+        name: req.user.name,
+        rol: req.user.rol
+    });
+});
+
+
 router.get('/equiposS/marcas', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerMarcas, (req, res) => {
     res.json(resultados);
 });
@@ -369,11 +378,11 @@ router.post('/insertarPersonal', registroControllerS.registrarPersonal);
 
 
 //Ruta para eliminar y editar personal
-router.get('/deleteEquiposS/:id', deleteControllerS.deleteEquipos);
+router.get('/bajaEquiposS/:id', deleteControllerS.bajaEquipos);
 
 router.post('/updateEquiposS/:folio', editControllerS.updateEquipos);
 
-router.post('/insertarEquipos', registroControllerS.registrarEquipos);
+router.post('/insertarEquiposS', registroControllerS.registrarEquipos);
 
 // Ruta protegida para el index del jefe (requiere autenticación y rol de jefe)
 router.get('/indexJ', autenticacionMiddleware, autorizacionMiddleware(1), (req, res) => {
