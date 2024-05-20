@@ -92,7 +92,7 @@ router.post('/asignacionS', autenticacionMiddleware, autorizacionMiddleware(2), 
     });
 });
 
-router.get('/asignacionS/folio', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerEquiposFolio, (req, res) => {
+router.get('/asignacionS/folio', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerEquiposFolioS, (req, res) => {
     res.json(resultados);
 });
 

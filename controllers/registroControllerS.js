@@ -369,7 +369,6 @@ exports.registrarEquipos = async (req, res) => {
         return res.status(500).send({ message: 'Hubo un error al registrar el equipo.' });
     }
 };
-
 exports.registrarAsignacion = async (req, res) => {
     const nuevoFolio = req.body.folio;
     const nuevoPersonal = req.body.personal;
@@ -385,7 +384,6 @@ exports.registrarAsignacion = async (req, res) => {
                 console.error('Error al verificar si la asignación existe:', error);
                 return res.render('errores/error');
             }
-
             // Si el equipo ya existe, mostrar un mensaje de error
             if (results.length > 0) {
                 return res.render('supervisor/asignacionEquipos', {  
@@ -407,11 +405,18 @@ exports.registrarAsignacion = async (req, res) => {
                     return res.render('errores/error');
                 }
                 const usuarioId = userResult[0].usuarioId;
-
-            
-                // Si el equipo no ha sido asignado, insertarlo en la base de datos
-                conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, asignarEquiposEstado, usuarioId) VALUES (?, ?, ?, ?, ?, ?)', 
-                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, nuevoEstado, usuarioId], 
+                conexion.query(
+                    'UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', [ estadoId, nuevoFolio]
+                );
+                conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults)=> {
+                    if (error) {
+                        console.error('Error al obtener el ID del estado:', error);
+                        return res.render('errores/error');
+                    }
+                    const estadoId = estadoResults[0].estadoId;
+                    // Si el equipo no ha sido asignado, insertarlo en la base de datos
+                    conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, usuarioId, estadoId) VALUES (?, ?, ?, ?, ?, ?)', 
+                    [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, usuarioId, estadoId], 
                     (error, insertResult) => {
                         if (error) {
                             console.error('Error al asignar el equipo:', error);
@@ -431,6 +436,80 @@ exports.registrarAsignacion = async (req, res) => {
                         }
                     });
                 });
+            })
+        })
+        } catch (error) {
+            console.error('Error en el controlador:', error);
+            res.render('errores/error');
+        }
+    };
+    exports.registrarBodega = async (req, res) => {
+        const nuevoFolio = req.body.folio;
+        const nuevaFecha = req.body.fecha;
+        const nuevoEstado = req.body.estado;
+        const usuario = req.session.name;
+    
+        try {
+            // Verificar si la asignación ya existe
+            conexion.query('SELECT * FROM bodegaDesmontaje WHERE equiposFolio = ?', [nuevoFolio], (error, results) => {
+                if (error) {
+                    console.error('Error al verificar si la asignación existe:', error);
+                    return res.render('errores/error');
+                }
+                // Si el equipo ya existe, mostrar un mensaje de error
+                if (results.length > 0) {
+                    return res.render('jefe/bodegaDesmontaje', {  
+                        results: results,
+                        name: req.session.name,
+                        alert: true,
+                        alertTitle: "Error al Asignar este equipo",
+                        alertMessage: "Este equipo ya fue asignado a otra persona",
+                        alertIcon: 'error',
+                        showConfirmButton: true,
+                        timer: false,
+                        ruta: 'bodegaJ'
+                    });
+                }
+    
+                conexion.query('SELECT usuarioId FROM usuarios WHERE usuarioNombre = ?', [usuario], (error, userResult) => {
+                    if (error) {
+                        console.error('Error al obtener el ID de usuario:', error);
+                        return res.render('errores/error');
+                    }
+                    const usuarioId = userResult[0].usuarioId;
+                    conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults)=> {
+                        if (error) {
+                            console.error('Error al obtener el ID del estado:', error);
+                            return res.render('errores/error');
+                        }
+                        const estadoId = estadoResults[0].estadoId;
+                        conexion.query(
+                            'UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', [ estadoId, nuevoFolio]
+                        );
+                        // Si el equipo no ha sido asignado, insertarlo en la base de datos
+                        conexion.query('INSERT INTO bodegaDesmontaje (bodegaDesmontajeFecha, equiposFolio, estadoId, usuarioId) VALUES (?, ?, ?, ?)', 
+                        [nuevaFecha, nuevoFolio, estadoId, usuarioId], 
+                        (error, insertResult) => {
+                            if (error) {
+                                console.error('Error al asignar el equipo:', error);
+                                return res.render('errores/error');
+                            } else{
+                                // Mostrar mensaje de éxito y todos los equipos obtenidos
+                                res.render('jefe/bodegaDesmontaje', {
+                                    results: results,
+                                    name: req.session.name,
+                                    alert: true,
+                                    alertTitle: "Inserción Completada",
+                                    alertMessage: "Se asigno correctamente el equipo al usuario",
+                                    alertIcon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    ruta: 'bodegaJ'
+                                });
+                            }
+                        });
+                    });
+                })
             })
         } catch (error) {
             console.error('Error en el controlador:', error);
