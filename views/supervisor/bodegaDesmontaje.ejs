@@ -1,0 +1,212 @@
+<head>
+    <title>Bodega de Desmontaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+    <%- include ('layouts/dashboard.ejs') %>
+    <div class="container mt-5"> 
+        <div class="col-md-20">  
+            <h1>Bodega de Desmontaje</h1>
+            <!-- Botón para mostrar el modal de inserción -->
+            <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modalInsertar">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span class="d-none d-sm-inline">Agregar a Bodega de Desmontaje</span>
+            </button><br><br>
+        </div>
+
+        <div class="col-md-20">
+            <h1> </h1><br>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="custom-table table-striped">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Folio Telmex</th>
+                            <th>Numero de Serie</th>
+                            <th>Nombre de la Marca</th>
+                            <th>Tipo de Equipo</th>
+                            <th>Modelo</th>
+                            <th>RAM</th>
+                            <th>Velocidad</th>
+                            <th>Disco Duro</th>
+                            <th>Capturo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <% if (Array.isArray(results) && results.length > 0) { %>
+                    <tbody>
+                    <% results.forEach((bodega) => { %>
+                        <tr>
+                            <% const fecha = new Date(bodega.bodegaDesmontajeFecha); %>
+                            <td><%= fecha.toISOString().split('T')[0] %></td>
+                            <td><%= bodega.equiposFolio %></td>
+                            <td><%= bodega.equiposSerie %></td>
+                            <td><%= bodega.marcaNombre %></td>
+                            <td><%= bodega.tipoEquipoNombre %></td>
+                            <td><%= bodega.equiposmodelo %></td>
+                            <td><%= bodega.equiposRAM %></td>
+                            <td><%= bodega.equiposVelocidad %></td>
+                            <td><%= bodega.equiposDiscoDuro %></td>
+                            <td><%= bodega.usuarioNombre %></td>
+                            <td><%= bodega.estadoNombre %></td>
+                        </tr>
+                    <% }) %>
+                    </tbody>    
+                    <% } else { %>
+                    <tbody>
+                        <tr>
+                            <td colspan="10">No hay resultados disponibles</td>
+                        </tr>
+                    </tbody>
+                    <% } %>                         
+                </table>
+            </div>
+        </div>                 
+    </div>
+        <!-- Modal de inserción -->
+        <div class="modal fade" id="modalInsertar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Insertar a Bodega</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario de inserción -->
+                        <form id="formInsertar" action="/bodegaS" method="POST">
+                            <input type="hidden" class="form-control mb-3" name="id">
+                            <select name="folio" id="folio" class="form-control mb-3" required>
+                                <option selected>Seleccione el folio del equipo</option>
+                            </select>
+                            <input type="text" class="form-control mb-3" name="serie" placeholder="Serie" readonly>
+                            <input type="text" class="form-control mb-3" name="marca" placeholder="Marca" readonly>
+                            <input type="text" class="form-control mb-3" name="tipo"  placeholder="Tipo Equipo" readonly>
+                            <input type="text" class="form-control mb-3" name="modelo" placeholder="Modelo" readonly>
+                            <input type="text" class="form-control mb-3" name="ram" placeholder="RAM" readonly>
+                            <input type="text" class="form-control mb-3" name="velocidad" placeholder="Velocidad" readonly>
+                            <input type="text" class="form-control mb-3" name="disco" placeholder="Disco Duro" readonly>
+
+                            <input type="hidden" class="form-control mb-3" name="estado" id="estado" value="BODEGA" readonly>   
+                            <input type="date" class="form-control mb-3" name="fecha" id="fecha" readonly>
+                            <input type="submit" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>        
+          
+    <!-- Content End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> 
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="resources/lib/chart/chart.min.js"></script>
+<script src="resources/lib/easing/easing.min.js"></script>
+<script src="resources/lib/waypoints/waypoints.min.js"></script>
+<script src="resources/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment.min.js"></script>
+<script src="resources/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="resources/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="resources/js/main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    window.onload = () => {
+        // Obtener la fecha actual en el formato 'YYYY-MM-DD'
+        const fechaActual = new Date().toISOString().split('T')[0];
+
+        // Establecer el valor del campo de fecha
+        document.getElementById('fecha').value = fechaActual;
+
+        fetch('/asignacionS/folio')
+            .then(response => response.json())
+            .then(data => {
+                const selectEquipos = document.getElementById('folio');
+                data.forEach(equipos => {
+                    const option = document.createElement('option');
+                    option.value = equipos.equiposFolio;
+                    option.textContent = equipos.equiposFolio;
+                    selectEquipos.appendChild(option);
+                });
+
+                // Agregar evento de cambio al select
+                selectEquipos.addEventListener('change', function() {
+                    // Obtener el valor seleccionado del select
+                    const selectedFolio = this.value;
+
+                    // Realizar la solicitud AJAX
+                    fetch(`/asignacionS/equipo/${selectedFolio}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Actualizar los campos de texto con los datos obtenidos de la base de datos
+                            document.querySelector('input[name="serie"]').value = data.equiposSerie;
+                            document.querySelector('input[name="marca"]').value = data.marcaNombre;
+                            document.querySelector('input[name="tipo"]').value = data.tipoEquipoNombre;
+                            document.querySelector('input[name="modelo"]').value = data.equiposmodelo;
+                            document.querySelector('input[name="ram"]').value = data.equiposRam;
+                            document.querySelector('input[name="velocidad"]').value = data.equiposVelocidad;
+                            document.querySelector('input[name="disco"]').value = data.equiposDiscoDuro;
+                        })
+                        .catch(error => console.error('Error al obtener los datos del equipo: ', error));
+                });
+            })
+        .catch(error => console.error('Error al obtener el folio: ', error));
+    }
+</script>
+<script>
+    $(function() {
+        $('#formInsertar').on('submit', function(event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            
+            $.ajax({
+                url: '/bodegaS',
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Se registro correctamente',
+                        text: response.message,
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/bodegaS';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    const response = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        title: '¡Ups! hubo un error al insertar',
+                        text: response.message || 'Hubo un error al insertar el equipo. Por favor, inténtalo de nuevo más tarde.',
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+    <% if (typeof alert != "undefined")  { %>
+    <script>
+        Swal.fire({
+            title:'<%= alertTitle %>',
+            text:'<%= alertMessage %>',
+            icon:'<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= timer %>
+        }).then(()=>{
+            window.location='/<%= ruta %>'
+        })
+
+    </script>
+    <% } %>
+    
+<%- include ('../Sesion.ejs') %>
+</body>
+</html>

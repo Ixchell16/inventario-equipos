@@ -126,6 +126,10 @@ router.get('/bajasAsiganacionS', autenticacionMiddleware, autorizacionMiddleware
     });
 });
 
+router.get('/bodegaS', autenticacionMiddleware, autorizacionMiddleware(2), mostrarControllerS.mostrarBodega);
+
+router.post('/bodegaS', autenticacionMiddleware, autorizacionMiddleware(2), registroControllerS.registrarBodega);
+
 router.get('/altaEquipos/:id', registroControllerJ.altaEquipos);
 
 router.get('/bodegaJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBodega);

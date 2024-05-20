@@ -458,7 +458,7 @@ exports.registrarAsignacion = async (req, res) => {
                 }
                 // Si el equipo ya existe, mostrar un mensaje de error
                 if (results.length > 0) {
-                    return res.render('jefe/bodegaDesmontaje', {  
+                    return res.render('supervisor/bodegaDesmontaje', {  
                         results: results,
                         name: req.session.name,
                         alert: true,
@@ -467,7 +467,7 @@ exports.registrarAsignacion = async (req, res) => {
                         alertIcon: 'error',
                         showConfirmButton: true,
                         timer: false,
-                        ruta: 'bodegaJ'
+                        ruta: 'bodegaS'
                     });
                 }
     
@@ -495,7 +495,7 @@ exports.registrarAsignacion = async (req, res) => {
                                 return res.render('errores/error');
                             } else{
                                 // Mostrar mensaje de éxito y todos los equipos obtenidos
-                                res.render('jefe/bodegaDesmontaje', {
+                                res.render('supervisor/bodegaDesmontaje', {
                                     results: results,
                                     name: req.session.name,
                                     alert: true,
@@ -504,7 +504,7 @@ exports.registrarAsignacion = async (req, res) => {
                                     alertIcon: 'success',
                                     showConfirmButton: false,
                                     timer: 1500,
-                                    ruta: 'bodegaJ'
+                                    ruta: 'bodegaS'
                                 });
                             }
                         });

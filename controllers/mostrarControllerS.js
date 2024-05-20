@@ -127,3 +127,19 @@ exports.mostrarBajas = async (req, res) => {
         res.status(500).render('errores/error');
     }
 };
+
+
+exports.mostrarBodega = async (req, res) => {
+    try{
+        conexion.query('SELECT bd.bodegaDesmontajeId, es.estadoNombre, bd.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, u.usuarioNombre AS usuarioNombre, es.estadoId AS estadoId , es.estadoNombre AS estadoNombre, bd.bodegaDesmontajeFecha FROM bodegaDesmontaje bd JOIN equipos e ON bd.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN usuarios u ON bd.usuarioId = u.usuarioId JOIN estado es ON bd.estadoId = es.estadoId WHERE bd.estadoId = 4',(error, results)=>{
+            if(error){
+                console.log('Error al consultar la base de datos:', error);
+                res.render('errores/error');
+            } else {                      
+                res.render('supervisor/bodegaDesmontaje', { results: results, name: req.session.name });
+            }   
+        })
+    }catch (error){
+        console.log('Error al actualizar la bodega:', error);
+    }
+};
