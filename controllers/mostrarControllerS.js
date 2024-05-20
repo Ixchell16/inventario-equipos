@@ -96,15 +96,18 @@ exports.mostrarUser = async (req, res) => {
 };
 
 exports.mostrarAsignacion = async (req, res) => {
-    
-    conexion.query('SELECT ae.asignarEquiposId, ae.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, u.usuarioNombre AS usuarioNombre, l.lugarSiglas, l.lugarEdificios, ae.asignarEquiposFecha, ae.asignarEquiposEstado FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId WHERE ae.asignarEquiposEstado = "Alta"',(error, results)=>{
-        if(error){
-            console.error('Error al consultar la base de datos:', error);
-            res.render('errores/error');
-        } else {                       
-            res.render('supervisor/consultaAsignacion', { results: results, name: req.session.name });
-        }   
-    })
+    try {
+        conexion.query('SELECT ae.asignarEquiposId, es.estadoNombre, ae.equiposFolio, e.equiposSerie, u.usuarioNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, p.personalId AS personalId, u.usuarioNombre AS usuarioNombre, u.usuarioId AS usuarioId, l.lugarSiglas, l.lugarEdificios, l.lugarId AS lugarId, es.estadoId AS estadoId ,ae.asignarEquiposFecha, es.estadoNombre AS estadoNombre FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId JOIN estado es ON ae.estadoId = es.estadoId WHERE ae.estadoId = 3', (error, results) => {
+            if (error) {
+                console.log('Error al consultar la base de datos:', error);
+                res.render('errores/error');
+            } else {                      
+                res.render('supervisor/consultaAsignacion', { results: results, name: req.session.name });
+            }   
+        })
+    } catch (error) {
+        console.log('Error al actualizar al equipo:', error);
+    }
 };
 
 

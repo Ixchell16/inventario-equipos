@@ -405,15 +405,15 @@ exports.registrarAsignacion = async (req, res) => {
                     return res.render('errores/error');
                 }
                 const usuarioId = userResult[0].usuarioId;
-                conexion.query(
-                    'UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', [ estadoId, nuevoFolio]
-                );
                 conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [nuevoEstado], (error, estadoResults)=> {
                     if (error) {
                         console.error('Error al obtener el ID del estado:', error);
                         return res.render('errores/error');
                     }
                     const estadoId = estadoResults[0].estadoId;
+                    conexion.query(
+                        'UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', [ estadoId, nuevoFolio]
+                    );
                     // Si el equipo no ha sido asignado, insertarlo en la base de datos
                     conexion.query('INSERT INTO asignarEquipos (equiposFolio, PersonalId, lugarId, asignarEquiposFecha, usuarioId, estadoId) VALUES (?, ?, ?, ?, ?, ?)', 
                     [nuevoFolio, nuevoPersonal, nuevoLugar, nuevaFecha, usuarioId, estadoId], 

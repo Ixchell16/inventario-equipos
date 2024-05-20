@@ -108,7 +108,7 @@ router.get('/asignacionS/lugar', autenticacionMiddleware, autorizacionMiddleware
 
 router.get('/asignacionS/lugar/:id', autenticacionMiddleware, autorizacionMiddleware(2), queries.obtenerLugar);
 
-
+router.post('/updateAsignacionS/:id', editControllerS.updateAsignacion);
 
 router.get('/bajasAsiganacion', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBajas, (req, res) => {
     res.render('jefe/bajasEquipos', {

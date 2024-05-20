@@ -147,3 +147,29 @@ exports.updateEquipos = async (req, res) => {
         res.status(500).render('errores/error');
     }
 };
+
+exports.updateAsignacion = async (req, res) => {
+    const {id, folio, personal, lugar, fecha, estado, usuario } = req.body;
+    const user =req.session.name
+    try{
+            conexion.query('SELECT estadoId FROM estado WHERE estadoNombre = ?', [estado], (error, estadoResult) => {
+                if (error) {
+                    console.error('Error al obtener el ID de usuario:', error);
+                    return res.render('errores/error');
+                }
+                const estadoId = estadoResult[0].estadoId;
+                // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
+                conexion.query('UPDATE asignarEquipos SET equiposFolio = ?, personalId = ?, lugarId = ?, asignarEquiposFecha= ?, usuarioId = ?, estadoId = ? WHERE asignarEquiposId = ?',
+                [folio, personal, lugar, fecha, usuario, estadoId, id], (error, results) => {
+                    if (error) {
+                        console.log('Error al actualizar al equipo:', error);
+                        res.render('errores/error');
+                    } else {
+                        // Redirigir a la página de tipos de equipos después de la actualización
+                        res.redirect('/consultaAsigacionS');
+                    }
+                });
+                })
+    } catch{
+    }
+};
