@@ -186,21 +186,9 @@ router.post('/personalJ', autenticacionMiddleware, autorizacionMiddleware(1),reg
     });
 });
 
-router.get('/equiposJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarEquipos, (req, res) => {
-    res.render('jefe/equipos', {
-        login: true,
-        name: req.user.name,
-        rol: req.user.rol
-    });
-});
+router.get('/equiposJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarEquipos);
 
-router.post('/equiposJ', autenticacionMiddleware, autorizacionMiddleware(1),registroControllerJ.registrarEquipos, (req, res) => {
-    res.render('jefe/equipos', {
-        login: true,
-        name: req.user.name,
-        rol: req.user.rol
-    });
-});
+router.post('/equiposJ', autenticacionMiddleware, autorizacionMiddleware(1),registroControllerJ.registrarEquipos);
 
 router.get('/equiposJ/marcas', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerMarcas, (req, res) => {
     res.json(resultados);

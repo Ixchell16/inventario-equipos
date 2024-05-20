@@ -260,34 +260,51 @@ exports.registrarEquipos = async (req, res) => {
     const nuevaRAM = req.body.ram;
     const nuevaVelocidad = req.body.velocidad;
     const nuevoDisco = req.body.disco;
-    try{
-        // Verificar si el equipo ya existe
-        conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? AND equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+
+    const userName = req.session.name;
+
+    try {
+        // Obtener el usuarioId a partir del nombre de usuario de la sesión
+        conexion.query('SELECT usuarioId FROM usuarios WHERE nombreUsuario = ?', [userName], (error, userResults) => {
             if (error) {
-                console.log('Error al verificar si existe:', error);
-                res.status(500).send({ message: 'Hubo un error al actualizar el usuario.' });
-                reject(error);
-            } else {
-                if(results.length >0){
-                    res.status(404).send({ message: 'El equipo ya existe' });
+                console.log('Error al obtener el usuario:', error);
+                return res.status(500).send({ message: 'Hubo un error al obtener el usuario.' });
+            }
+            
+            if (userResults.length === 0) {
+                return res.status(400).send({ message: 'Usuario no encontrado' });
+            }
+            
+            const usuarioId = userResults[0].usuarioId;
+
+            // Verificar si el equipo ya existe
+            conexion.query('SELECT * FROM equipos WHERE equiposFolio = ? OR equiposSerie = ?', [nuevoFolio, nuevaSerie], (error, results) => {
+                if (error) {
+                    console.log('Error al verificar si existe:', error);
+                    return res.status(500).send({ message: 'Hubo un error al verificar el equipo.' });
+                }
+                
+                if (results.length > 0) {
+                    return res.status(400).send({ message: 'El equipo ya existe' });
                 } else {
-                    conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposmodelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, 1], (error, insertResult) => {
+                    // Insertar el nuevo equipo
+                    conexion.query('INSERT INTO equipos (equiposFolio, equiposSerie, marcaId, tipoEquipoId, equiposModelo, equiposRAM, equiposVelocidad, equiposDiscoDuro, estadoId, usuarioId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [nuevoFolio, nuevaSerie, nuevaMarca, nuevoTipo, nuevoModelo, nuevaRAM, nuevaVelocidad, nuevoDisco, 1, usuarioId], (error, insertResult) => {
                         if (error) {
                             console.log('Error al insertar el equipo:', error);
-                            res.render('errores/error');
+                            return res.status(500).send({ message: 'Hubo un error al insertar el equipo.' });
                         } else {
-                            // Redirigir a la página de consulta de usuarios después de la actualización
-                            res.status(200).send({ message: 'El usuario se actualizó correctamente.' });
+                            return res.status(200).send({ message: 'El equipo se registró correctamente.' });
                         }
                     });
                 }
-            }
+            });
         });
-    }catch (error){
-        res.status(500).send({ message: 'Hubo un error al registrar el equipo' });
+    } catch (error) {
         console.log('Error al registrar el equipo:', error);
+        return res.status(500).send({ message: 'Hubo un error al registrar el equipo.' });
     }
 };
+
 
 
 exports.registrarAsignacion = async (req, res) => {

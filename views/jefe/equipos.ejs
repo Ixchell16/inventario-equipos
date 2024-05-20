@@ -58,6 +58,7 @@
                                         data-velo="<%= equipos.equiposVelocidad %>"
                                         data-disco="<%= equipos.equiposDiscoDuro %>"
                                         data-estado="<%= equipos.estadoId %>"
+                                        data-user="<%= equipos.userId %>"
                                         class="update-btn btn btn-warning">
                                         <i class="bi bi-pencil-square"></i>  
                                         <span class="d-none d-sm-inline">Editar</span>
@@ -124,9 +125,9 @@
                     </div>
                     <div class="modal-body">
                         <!-- Formulario de inserción -->
-                        <form id="formInsertar" action="/equiposJ" method="POST">
-                            <input type="text" class="form-control mb-3" name="folio" placeholder="Ingrese el folio telmex del equipo"  maxlength="8" oninput="this.value = this.value.toUpperCase()" required>
-                            <input type="text" class="form-control mb-3" name="serie" placeholder="Ingrese el numero de serie del equipo"  maxlength="16" oninput="this.value = this.value.toUpperCase()" required>
+                        <form id="formInsertar" action="/insertarEquipos" method="POST">
+                            <input type="text" class="form-control mb-3" name="folio" placeholder="Ingrese el folio telmex del equipo" maxlength="8" oninput="this.value = this.value.toUpperCase()" required>
+                            <input type="text" class="form-control mb-3" name="serie" placeholder="Ingrese el numero de serie del equipo" maxlength="16" oninput="this.value = this.value.toUpperCase()" required>
                             <select name="marca" id="marca" class="form-control mb-3" required>
                                 <option selected>Seleccione la marca del equipo</option>
                             </select>
@@ -137,12 +138,14 @@
                             <input type="text" class="form-control mb-3" name="ram" placeholder="Ingrese la RAM del equipo (Si no se conoce colocar N/A)" required>
                             <input type="text" class="form-control mb-3" name="velocidad" placeholder="Ingrese la Velocidad del equipo (Si no se conoce colocar N/A)" required>
                             <input type="text" class="form-control mb-3" name="disco" placeholder="Ingrese la Disco Duro del equipo (Si no se conoce colocar N/A)" required>
+                            <input type="hidden" class="form-control mb-3" name="estado" id="estado"  value="ALTA" readonly>   
+                            
                             <input type="submit" class="btn btn-primary">
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
           
     <!-- Content End -->
 
@@ -165,6 +168,8 @@
 <script src="resources/js/main.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
 
 <script>
     window.onload = () => {
@@ -223,29 +228,37 @@
 </script>
 
 <script>
-    $(function(){
-        // Captura el envío del formulario de inserción y envía los datos al servidor
+    $(function() {
         $('#formInsertar').on('submit', function(event) {
             event.preventDefault();
             const formData = $(this).serialize();
             
             $.ajax({
-                url: '/insertarEquipos', // Ruta del servidor para manejar la inserción
+                url: '/insertarEquipos',
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Si la actualización es exitosa, recarga la página para mostrar los cambios
-                    alert(response.message);
-                    window.location.href = '/equiposJ';
+                    Swal.fire({
+                        title: 'Se registro correctamente',
+                        text: response.message,
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/equiposJ';
+                    });
                 },
                 error: function(xhr, status, error) {
-                    console.log('Error al insertar el equipo:', error);           
-                    // Muestra un mensaje de error al usuario
-                    alert('Hubo un error al ingresar al equipo. Por favor, inténtalo de nuevo más tarde.');
+                    const response = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        title: '¡Ups! hubo un error al insertar',
+                        text: response.message || 'Hubo un error al insertar el equipo. Por favor, inténtalo de nuevo más tarde.',
+                        icon: 'error'
+                    });
                 }
             });
         });
     });
+
+
 </script>
 
 <script>

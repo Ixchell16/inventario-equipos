@@ -50,8 +50,11 @@ exports.mostrarPersonal = async (req, res) => {
 };
 
 exports.mostrarEquipos = async (req, res) => {
-    conexion.query('SELECT e.*, m.marcaNombre, te.tipoEquipoNombre, es.estadoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId WHERE e.estadoId = 1', (error, results) => {
-        if(error){
+    const user = req.session.name;
+    const sql = 'SELECT e.*, m.marcaNombre, te.tipoEquipoNombre, es.estadoNombre, u.usuarioNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId INNER JOIN usuarios u ON e.usuarioId = u.usuarioId WHERE e.estadoId = 1 AND u.usuarioNombre = ?';
+
+    conexion.query(sql, [user], (error, results) => {
+        if (error) {
             console.log('Error al consultar la base de datos:', error);
             res.render('errores/error');
         } else {                       
@@ -59,6 +62,7 @@ exports.mostrarEquipos = async (req, res) => {
         }   
     });
 };
+
 
 exports.mostrarBajas = async (req, res) => {
     conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId WHERE e.estadoId = 2',(error, results)=>{
