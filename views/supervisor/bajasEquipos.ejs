@@ -23,7 +23,6 @@
                         <th>Disco Duro</th>
                         <th>Capturo</th>
                         <th>Estado</th>
-                        <th>Usuario</th>
                         <th>Editar</th>
                         <th>Alta</th>
                     </tr>
@@ -40,8 +39,8 @@
                         <td><%= equipos.equiposRAM %></td>
                         <td><%= equipos.equiposVelocidad %></td>
                         <td><%= equipos.equiposDiscoDuro %></td>
+                        <td><%= equipos.usuarioNombre%></td>
                         <td><%= equipos.estadoNombre %></td>
-                        <td><%= equipos.usuarioNombre %></td>
                         <td>
                             <button type="button" data-bs-toggle="modal" data-bs-target="#myModal" 
                                     data-folio="<%= equipos.equiposFolio %>" 
@@ -53,6 +52,7 @@
                                     data-velocidad="<%= equipos.equiposVelocidad %>"
                                     data-disco="<%= equipos.equiposDiscoDuro %>"
                                     data-estado="<%= equipos.estadoId %>"
+                                    data-usuario="<%= equipos.usuarioId %>"
                                     class="update-btn btn btn-warning">
                                     <i class="bi bi-pencil-square"></i>  
                                     <span class="d-none d-sm-inline">Editar</span>
@@ -72,7 +72,7 @@
                 <% } else { %>
                 <tbody>
                     <tr>
-                        <td colspan="11">No hay resultados disponibles</td>
+                        <td colspan="10">No hay resultados disponibles</td>
                     </tr>
                 </tbody>
                 <% } %>                      
@@ -101,6 +101,7 @@
                         <input type="text" class="form-control" name="velocidad" id="velocidad" placeholder="Ingrese la Velocidad del equipo" required><br>
                         <input type="text" class="form-control" name="disco" id="disco" placeholder="Ingrese la Disco Duro del equipo" required><br>
                         <input type="hidden" class="form-control mb-3" name="estado" id="estado" readonly>   
+                        <input type="hidden" class="form-control mb-3" name="usuario" id="usuario" readonly>   
                         <button type="submit" class="btn btn-primary btn-sm pull-right">Guardar Cambios</button>
                     </form>
                 </div>
@@ -191,6 +192,7 @@
             const velocidad = $this.attr('data-velocidad'); 
             const disco = $this.attr('data-disco');
             const estado = $this.attr('data-estado');
+            const usuario =$this.attr('data-usuario');
             
             // Asigna los valores a los campos del formulario en el modal
             $('#folio').val(folio);
@@ -202,6 +204,7 @@
             $('#velocidad').val(velocidad); 
             $('#disco').val(disco);
             $('#estado').val(estado);
+            $('#usuario').val(usuario);
 
             // Muestra el modal
             $('#myModal').modal('show');
@@ -214,7 +217,7 @@
             const folio = $('#folio').val(); // Obtener el folio para la URL
 
             $.ajax({
-                url: `/updateEquipos/${folio}`, // Usar template literal para incluir el folio en la URL
+                url: `/updateEquiposS/${folio}`, // Usar template literal para incluir el folio en la URL
                 method: 'POST',
                 data: formData,
                 success: function(response) {
@@ -224,7 +227,7 @@
                         text: response.message,
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/bajasAsiganacion';
+                        window.location.href = '/bajasAsiganacionS';
                     });
                 },
                 error: function(xhr, status, error) {
