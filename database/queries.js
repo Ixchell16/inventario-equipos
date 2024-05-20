@@ -62,14 +62,22 @@ exports.obtenerTipoM = (req, res) => {
 };
 
 exports.obtenerEquiposFolio = (req, res) => {
-    conexion.query('SELECT equiposFolio FROM equipos WHERE estadoId = 1', (error, resultados) => {
-        if (error) {
-            console.log('Error al obtener el folio: ', error);
-            res.status(500).json({ error: 'Error al obtener el folio' });
-            return;
-        }
-        res.json(resultados);
-    });
+    const username = req.session.name;
+    try{
+        conexion.query('SELECT * FROM usuarios WHERE usuarioNombre = ?', [username],(error, results)=>{
+            const usuarioId = results[0].usuarioId;
+            conexion.query('SELECT equiposFolio FROM equipos WHERE estadoId = 1 &&  usuarioId =?',[usuarioId], (error, resultados) => {
+                if (error) {
+                    console.log('Error al obtener el folio: ', error);
+                    res.status(500).json({ error: 'Error al obtener el folio' });
+                    return;
+                }
+                res.json(resultados);
+            });
+        })
+    }catch (error){
+        console.log('Error al actualizar al equipo:', error);
+    }
 };
 
 exports.obtenerEquipos = (req, res) => {
@@ -133,5 +141,24 @@ exports.obtenerLugar = (req, res) => {
     } catch (error) {
         console.error('Error al obtener el equipo:', error);
         res.status(500).json({ mensaje: 'Error interno del servidor' });
+    }
+};
+
+exports.obtenerEquiposFolioJ = (req, res) => {
+    const username = req.session.name;
+    try{
+        conexion.query('SELECT * FROM usuarios WHERE usuarioNombre = ?', [username],(error, results)=>{
+            const usuarioId = results[0].usuarioId;
+            conexion.query('SELECT equiposFolio FROM equipos WHERE estadoId = 2 &&  usuarioId =?',[usuarioId], (error, resultados) => {
+                if (error) {
+                    console.log('Error al obtener el folio: ', error);
+                    res.status(500).json({ error: 'Error al obtener el folio' });
+                    return;
+                }
+                res.json(resultados);
+            });
+        })
+    }catch (error){
+        console.log('Error al actualizar al equipo:', error);
     }
 };

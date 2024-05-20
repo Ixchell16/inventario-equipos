@@ -130,6 +130,12 @@ router.get('/altaEquipos/:id', registroControllerJ.altaEquipos);
 
 router.get('/bodegaJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarBodega);
 
+router.post('/bodegaJ', autenticacionMiddleware, autorizacionMiddleware(1), registroControllerJ.registrarBodega);
+
+router.get('/asignacionJ/folio', autenticacionMiddleware, autorizacionMiddleware(1), queries.obtenerEquiposFolioJ, (req, res) => {
+    res.json(resultados);
+});
+
 // Ruta para mostrar los tipos de Equipos
 router.get('/tiposEquiposJ', autenticacionMiddleware, autorizacionMiddleware(1), mostrarControllerJ.mostrarTipo, (req, res) => {
     res.render('jefe/tiposEquipos', {
