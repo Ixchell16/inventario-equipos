@@ -109,7 +109,7 @@ exports.deleteAsignacion = async (req, res) => {
                 }else{
                     // Eliminar el tipo de equipo de la base de datos
                     console.log('Si se pudo:', results)
-                    conexion.query('DELETE FROM asignarEquipos WHERE asignarEquiposId = ?', [id]);
+                    conexion.query('DELETE FROM asignarEquipos WHERE equiposFolio = ?', [id]);
                     res.json({ success: true });
                 }
             });
