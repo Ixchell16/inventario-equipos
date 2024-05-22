@@ -101,12 +101,18 @@ async function verificarAsignacion(idEquipo) {
 }
 
 exports.deleteAsignacion = async (req, res) => {
-    const { id } = req.params; 
+    const { id} = req.params; 
     try {
-        // Eliminar el tipo de equipo de la base de datos
-        
-        conexion.query('DELETE FROM asignarEquipos WHERE asignarEquiposId = ?', [id]);
-        res.json({ success: true });
+            conexion.query('UPDATE equipos SET estadoId = ? WHERE equiposFolio = ?', [ 1, id], (error, results) =>{
+                if(error){
+                    console.log('No se puede', error);
+                }else{
+                    // Eliminar el tipo de equipo de la base de datos
+                    console.log('Si se pudo:', results)
+                    conexion.query('DELETE FROM asignarEquipos WHERE asignarEquiposId = ?', [id]);
+                    res.json({ success: true });
+                }
+            });
     } catch (error) {
         // Manejar errores
         console.error('Error al eliminar el lugar:', error);
