@@ -344,10 +344,12 @@
                             }
                             return response.json();
                         })
+
                         .then(data => {
                             // Si la eliminación es exitosa, recargar la página para mostrar los cambios
                             window.location.reload();
                         })
+                        
                         .catch(error => {
                             console.error('Error al eliminar la asignacion:', error);
                             console.log(error);
