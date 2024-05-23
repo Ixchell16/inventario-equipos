@@ -28,7 +28,7 @@ exports.obtenerMarcas = (req, res) => {
 };
 
 exports.obtenerTipo = (req, res) => {
-    conexion.query('SELECT tipoEquipoId, tipoEquipoNombre FROM tipoEquipo', (error, resultados) => {
+    conexion.query('SELECT tipoEquipoId, tipoEquipoNombre FROM tipoequipo', (error, resultados) => {
         if (error) {
             console.log('Error al obtener el tipo: ', error);
             res.status(500).json({ error: 'Error al obtener el tipo' });
@@ -51,7 +51,7 @@ exports.obtenerMarcasM = (req, res) => {
 };
 
 exports.obtenerTipoM = (req, res) => {
-    conexion.query('SELECT tipoEquipoId, tipoEquipoNombre FROM tipoEquipo', (error, resultados) => {
+    conexion.query('SELECT tipoEquipoId, tipoEquipoNombre FROM tipoequipo', (error, resultados) => {
         if (error) {
             console.log('Error al obtener el tipo: ', error);
             res.status(500).json({ error: 'Error al obtener el tipo' });
@@ -102,7 +102,7 @@ exports.obtenerEquiposFolioS = (req, res) => {
 exports.obtenerEquipos = (req, res) => {
     try {
         const folio = req.params.folio; // Obtener el folio del parámetro de la ruta
-        conexion.query('SELECT e.equiposSerie AS equiposSerie, m.marcaNombre AS marcaNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro FROM equipos e JOIN marca m ON e.marcaId = m.marcaId JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId WHERE e.equiposFolio = ?', [folio], (error, resultados) => {
+        conexion.query('SELECT e.equiposSerie AS equiposSerie, m.marcaNombre AS marcaNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro FROM equipos e JOIN marca m ON e.marcaId = m.marcaId JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId WHERE e.equiposFolio = ?', [folio], (error, resultados) => {
             if (error) {
                 console.error('Error al obtener el equipo:', error);
                 return res.status(500).json({ mensaje: 'Error interno del servidor' });

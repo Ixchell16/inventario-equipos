@@ -3,7 +3,7 @@ const conexion = require('../database/db');
 const bcryptjs = require('bcryptjs');
 
 exports.mostrarTipo = async (req, res) => {
-    conexion.query('SELECT * FROM tipoEquipo',(error, results)=>{
+    conexion.query('SELECT * FROM tipoequipo',(error, results)=>{
         if(error){
             console.error('Error al consultar la base de datos:', error);
             res.render('error');
@@ -52,7 +52,7 @@ exports.mostrarEquipos = async (req, res) => {
         SELECT e.*, m.marcaNombre, te.tipoEquipoNombre, es.estadoNombre, u.usuarioNombre 
         FROM equipos e 
         INNER JOIN marca m ON e.marcaId = m.marcaId 
-        INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId 
+        INNER JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId 
         INNER JOIN estado es ON e.estadoId = es.estadoId 
         INNER JOIN usuarios u ON e.usuarioId = u.usuarioId 
         WHERE e.estadoId = 1`;
@@ -97,7 +97,7 @@ exports.mostrarUser = async (req, res) => {
 
 exports.mostrarAsignacion = async (req, res) => {
     try {
-        conexion.query('SELECT ae.asignarEquiposId, es.estadoNombre, ae.equiposFolio, e.equiposSerie, u.usuarioNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, p.personalId AS personalId, u.usuarioNombre AS usuarioNombre, u.usuarioId AS usuarioId, l.lugarSiglas, l.lugarEdificios, l.lugarId AS lugarId, es.estadoId AS estadoId ,ae.asignarEquiposFecha, es.estadoNombre AS estadoNombre FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId JOIN estado es ON ae.estadoId = es.estadoId WHERE ae.estadoId = 3', (error, results) => {
+        conexion.query('SELECT ae.asignarEquiposId, es.estadoNombre, ae.equiposFolio, e.equiposSerie, u.usuarioNombre, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, p.personalNombre AS personalNombre, p.personalId AS personalId, u.usuarioNombre AS usuarioNombre, u.usuarioId AS usuarioId, l.lugarSiglas, l.lugarEdificios, l.lugarId AS lugarId, es.estadoId AS estadoId ,ae.asignarEquiposFecha, es.estadoNombre AS estadoNombre FROM asignarEquipos ae JOIN equipos e ON ae.equiposFolio = e.equiposFolio JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN personal p ON ae.personalId = p.personalId JOIN usuarios u ON ae.usuarioId = u.usuarioId JOIN lugar l ON ae.lugarId = l.lugarId JOIN estado es ON ae.estadoId = es.estadoId WHERE ae.estadoId = 3', (error, results) => {
             if (error) {
                 console.log('Error al consultar la base de datos:', error);
                 res.render('errores/error');
@@ -114,7 +114,7 @@ exports.mostrarAsignacion = async (req, res) => {
 exports.mostrarBajas = async (req, res) => {
     const user = req.session.name;
     try{
-        conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre, u.usuarioNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId INNER JOIN usuarios u ON e.usuarioId = u.usuarioId WHERE e.estadoId = 2',(error, results)=>{
+        conexion.query('SELECT e.*, m.marcaNombre, es.estadoNombre, te.tipoEquipoNombre, u.usuarioNombre FROM equipos e INNER JOIN marca m ON e.marcaId = m.marcaId INNER JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId INNER JOIN estado es ON e.estadoId = es.estadoId INNER JOIN usuarios u ON e.usuarioId = u.usuarioId WHERE e.estadoId = 2',(error, results)=>{
             if(error){
                 console.error('Error al consultar la base de datos:', error);
                 res.render('errores/error', { message: 'Error al consultar la base de datos' });
@@ -131,7 +131,7 @@ exports.mostrarBajas = async (req, res) => {
 
 exports.mostrarBodega = async (req, res) => {
     try{
-        conexion.query('SELECT bd.bodegaDesmontajeId, es.estadoNombre, bd.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, u.usuarioNombre AS usuarioNombre, es.estadoId AS estadoId , es.estadoNombre AS estadoNombre, bd.bodegaDesmontajeFecha FROM bodegaDesmontaje bd JOIN equipos e ON bd.equiposFolio = e.equiposFolio JOIN tipoEquipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN usuarios u ON bd.usuarioId = u.usuarioId JOIN estado es ON bd.estadoId = es.estadoId WHERE bd.estadoId = 4',(error, results)=>{
+        conexion.query('SELECT bd.bodegaDesmontajeId, es.estadoNombre, bd.equiposFolio, e.equiposSerie, te.tipoEquipoNombre AS tipoEquipoNombre, e.equiposmodelo AS equiposmodelo, m.marcaNombre AS marcaNombre, e.equiposRam AS equiposRam, e.equiposVelocidad AS equiposVelocidad, e.equiposDiscoDuro AS equiposDiscoDuro, u.usuarioNombre AS usuarioNombre, es.estadoId AS estadoId , es.estadoNombre AS estadoNombre, bd.bodegaDesmontajeFecha FROM bodegaDesmontaje bd JOIN equipos e ON bd.equiposFolio = e.equiposFolio JOIN tipoequipo te ON e.tipoEquipoId = te.tipoEquipoId JOIN marca m ON e.marcaId = m.marcaId JOIN usuarios u ON bd.usuarioId = u.usuarioId JOIN estado es ON bd.estadoId = es.estadoId WHERE bd.estadoId = 4',(error, results)=>{
             if(error){
                 console.log('Error al consultar la base de datos:', error);
                 res.render('errores/error');

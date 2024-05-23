@@ -7,7 +7,7 @@ exports.updateTipo = async (req, res) => {
     const { nombre, tipoid } = req.body;
     try {
         // Ejecutar consulta SQL para actualizar el tipo de equipo en la base de datos
-        conexion.query('UPDATE tipoEquipo SET tipoEquipoNombre = ? WHERE tipoEquipoId = ?', [nombre, tipoid], (error, results) => {
+        conexion.query('UPDATE tipoequipo SET tipoEquipoNombre = ? WHERE tipoEquipoId = ?', [nombre, tipoid], (error, results) => {
             if (error) {
                 console.log('Error al actualizar el tipo de equipo:', error);
                 res.render('errores/error');

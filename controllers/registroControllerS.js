@@ -61,14 +61,14 @@ exports.registrarUsuario = async (req, res) => {
 exports.registrarTipo = async (req, res) => {
     const nuevoTipo = req.body.nombre;
         try {
-            conexion.query('SELECT * FROM tipoEquipo WHERE tipoEquipoNombre = ?', [nuevoTipo], (error, results) => {
+            conexion.query('SELECT * FROM tipoequipo WHERE tipoEquipoNombre = ?', [nuevoTipo], (error, results) => {
                 if (error) {
                     console.error('Error al verificar si el tipo de equipo existe:', error);
                     return res.render('errores/error');
                 }
                 // Si el tipo de equipo ya existe, mostrar un mensaje de error
                 if (results.length > 0) {
-                    conexion.query('SELECT * FROM tipoEquipo', (error, todoslosTipos) => {
+                    conexion.query('SELECT * FROM tipoequipo', (error, todoslosTipos) => {
                         if (error) {
                             console.error('Error al obtener los tipos de equipo:', error);
                         }
@@ -87,13 +87,13 @@ exports.registrarTipo = async (req, res) => {
                 }
 
                 // Si el tipo de equipo no existe, insertarlo en la base de datos
-                conexion.query('INSERT INTO tipoEquipo SET ?', { tipoEquipoNombre: nuevoTipo }, (error, insertResult) => {
+                conexion.query('INSERT INTO tipoequipo SET ?', { tipoEquipoNombre: nuevoTipo }, (error, insertResult) => {
                     if (error) {
                         console.error('Error al insertar el tipo de equipo:', error);
                     }
 
                     // Después de la inserción exitosa, realizar una nueva consulta para obtener todos los tipos de equipo existentes
-                    conexion.query('SELECT * FROM tipoEquipo', (error, tiposEquipos) => {
+                    conexion.query('SELECT * FROM tipoequipo', (error, tiposEquipos) => {
                         if (error) {
                             console.error('Error al obtener los tipos de equipo:', error);
                         }
