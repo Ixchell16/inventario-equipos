@@ -98,14 +98,10 @@
                 <div class="modal-body">
                     <form id="modal-form" action="/updateEquipos" method="POST">
                         <input type="text" class="form-control" name="folio" id="folio" placeholder="Ingrese el folio telmex del equipo" maxlength="8" readonly><br>
-                        <input type="text" class="form-control" name="serie" id="serie" placeholder="Ingrese el numero de serie del equipo" maxlength="16" required><br>
-                        <select name="marcaM" id="marcaM" class="form-control" required>
-                            <option selected>Seleccione la marca del equipo</option>
-                        </select><br>
-                        <select name="tipoM" id="tipoM" class="form-control" required>
-                            <option selected>Seleccione el tipo de equipo</option>
-                        </select><br>
-                        <input type="text" class="form-control" name="modelo" id="modelo" placeholder="Ingrese el modelo del equipo" required><br>
+                        <input type="text" class="form-control" name="serie" id="serie" placeholder="Ingrese el numero de serie del equipo" maxlength="16" readonly><br>
+                        <input type="text" class="form-control" name="marcaM" id="marcaM" readonly>
+                        <input type="text" class="form-control" name="tipoM" id="tipoM" readonly>
+                        <input type="text" class="form-control" name="modelo" id="modelo" placeholder="Ingrese el modelo del equipo" readonly><br>
                         <input type="text" class="form-control" name="ram" id="ram" placeholder="Ingrese la RAM del equipo" required><br>
                         <input type="text" class="form-control" name="velocidad" id="velocidad" placeholder="Ingrese la Velocidad del equipo" required><br>
                         <input type="text" class="form-control" name="disco" id="disco" placeholder="Ingrese la Disco Duro del equipo" required><br>
