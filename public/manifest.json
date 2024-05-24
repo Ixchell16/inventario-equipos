@@ -1,7 +1,7 @@
 {
-  "name": "Inventario de Equipos de Computo para Telmex",
+  "name": "Inventario de Equipos de Cómputo para Telmex",
   "short_name": "Inventario de Equipos",
-  "description": "Esta aplicación está diseñada para realizar un control de los equipos de computo",
+  "description": "Esta aplicación está diseñada para realizar un control de los equipos de Cómputo",
   "start_url": "/login",
   "display": "standalone",
   "background_color": "#ededed",
