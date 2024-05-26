@@ -10,10 +10,17 @@ exports.autenticarUsuario = async (req, res) => {
         conexion.query('SELECT * FROM usuarios WHERE usuarioUser = ?', [user], async (error, results, fields) => {
             if (error) {
                 console.error('Error al buscar usuario:', error);
-                res.status(500).send('Error interno del servidor');
+                res.render('login', {
+                    alert: true,
+                    alertTitle: "Error",
+                    alertMessage: "Error interno del servidor",
+                    alertIcon: 'error',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
                 return;
             }
-
             if (results.length === 0 || !(await bcryptjs.compare(pass, results[0].usuarioContraseña))) {
                 req.session.loggedin = false;
                 res.render('login', {
